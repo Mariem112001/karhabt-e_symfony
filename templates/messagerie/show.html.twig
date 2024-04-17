@@ -1,0 +1,41 @@
+{% extends 'baseBack.html.twig' %}
+
+{% block title %} 
+    Détails de la messagerie
+{% endblock %}
+
+{% block body %}
+    <h1 class="page-title">Messagerie</h1>
+
+    <div class="message-details">
+        <table class="table">
+            <tbody>
+                <tr>
+                    <th>Identifiant du message</th>
+                    <td>{{ messagerie.idmessage }}</td>
+                </tr>
+                <tr>
+                    <th>Contenu</th>
+                    <td>{{ messagerie.contenu }}</td>
+                </tr>
+                <tr>
+                    <th>Date d'envoi</th>
+                    <td>{{ messagerie.dateenvoie ? messagerie.dateenvoie|date('Y-m-d') : '' }}</td>
+                </tr>
+                <tr>
+                    <th>Vu</th>
+                    <td>{{ messagerie.vu ? 'Oui' : 'Non' }}</td>
+                </tr>
+                <tr>
+                    <th>Supprimé</th>
+                    <td>{{ messagerie.deleted ? 'Oui' : 'Non' }}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <a href="{{ path('app_messagerie_index') }}" class="btn btn-primary">Retour</a>
+    <a href="{{ path('app_messagerie_edit', {'idmessage': messagerie.idmessage}) }}" class="btn btn-secondary">Modifier</a>
+
+    {{ include('messagerie/_delete_form.html.twig') }}
+{% endblock %}

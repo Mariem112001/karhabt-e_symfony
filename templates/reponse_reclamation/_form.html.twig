@@ -1,0 +1,61 @@
+{% extends 'baseBack.html.twig' %}
+
+{% block title %}
+    Nouvelle réclamation
+{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-header" style="background-color: #4F79C7; color: white; text-align: center; font-style: italic;">
+                        Ajouter une réponse
+                    </div>
+                    <div class="card-body">
+                        {% if form_errors(form) is not empty %}
+                            <div class="alert alert-danger" role="alert">
+                                {% for error in form_errors(form) %}
+                                    {{ error.message }}
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                        {{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
+                        <div class="form-group" >
+                            {{ form_label(form.contenuReponse, null, {'label_attr': {'class': 'form-label', 'style': 'color: #4F79C7;' }}) }}
+                            {{ form_widget(form.contenuReponse, {'attr': {'class': 'form-control', 'style': 'width: 50%; height: 100%;'}}) }}
+                            {% if form_errors(form.contenuReponse) %}
+                                <div class="text-danger">
+                                    {{ form_errors(form.contenuReponse) }}
+                                </div>
+                            {% endif %}
+                        </div>
+                          <button type="submit" class="btn btn-primary">Envoyer</button>
+                        {{ form_end(form) }}
+                        {% if app.flashes('error') is not empty %}
+                            <div class="alert alert-danger mt-3">
+                              vous avez repondu a cette réclamation avec la meme reponse
+                                {{ app.flashes('error')|first }}
+                            </div>
+                        {% endif %}
+                        {% if app.flashes('success') is not empty %}
+                            <div class="alert alert-success mt-3">
+                                Votre réponse a été envoyée avec succès.
+                                {{ app.flashes('success')|first }}
+                            </div>
+                        {% endif %}
+                    </div>
+
+               <div class="col-md-6 " style="margin-left:130px;">
+    <img src="{{ asset('images/reponseAdmin.png') }}" alt="image" width="450" height="350">
+</div>
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="text-center" style="margin-top:10px;">
+        <a href="{{ path('app_reclamation_index_all') }}" class="btn btn-primary">Retour</a>
+    </div>
+{% endblock %}

@@ -1,0 +1,16 @@
+{% for reclamation in reclamations %}
+    <tr>
+        <td>{{ reclamation.sujet }}</td>
+        <td>{{ reclamation.description }}</td>
+        <td>{{ reclamation.dateReclamation ? reclamation.dateReclamation|date('Y-m-d') : '' }}</td>
+        <td>{{ reclamation.emailUser }}</td>
+        <td>
+            <a href="{{ path('app_reclamation_show', {'idr': reclamation.idr}) }}" style="color: #4F79C7;">Voir</a>
+            <a href="{{ path('app_reclamation_edit', {'idr': reclamation.idr}) }}" style="color: #4F79C7;">Modifier</a>
+        </td>
+    </tr>
+{% else %}
+    <tr>
+        <td colspan="5">Aucune réclamation trouvée.</td>
+    </tr>
+{% endfor %}

@@ -1,0 +1,39 @@
+{% extends 'baseBack.html.twig' %}
+
+{% block title %} 
+   Les conversations
+{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <h1 class="page-title text-center mb-4">Les conversations</h1>
+                
+                <div class="conversation-wrapper">
+                    <ul class="list-group conversation-list">
+                        {% for messagerie in messageries %}
+                            <li class="list-group-item conversation-item {% if messagerie.deleted %}deleted{% endif %}">
+                                <div class="d-flex align-items-center">
+                                    <img src="{{ asset('images/iconEnvMessg.png') }}" alt="image" class="img-fluid mr-3" style="width: 100px; height: 100px;">
+                                    <div class="conversation-preview flex-grow-1">
+                                        <p class="message-content">{{ messagerie.contenu }}</p>
+                                        <p class="message-date text-muted">{{ messagerie.dateenvoie ? messagerie.dateenvoie|date('Y-m-d') : '' }}</p>
+                                        {% if messagerie.deleted %}
+                                            <p class="deleted-message">Message supprimé</p>
+                                        {% endif %}
+                                    </div>
+                                    <a href="{{ path('conversation_view', { 'senderId': messagerie.sender.idu, 'receiverId': messagerie.receiver.idu }) }}" class="view-conversation-link btn btn-primary ml-2">Voir la conversation</a>
+                                </div>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                
+                <div class="text-center mt-4">
+                    <a href="{{ path('app_messagerie_new') }}" class="create-new-message-link btn btn-success">Créer un nouveau message</a>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

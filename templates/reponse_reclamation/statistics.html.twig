@@ -1,0 +1,44 @@
+{% extends 'baseBack.html.twig' %}
+
+{% block title %}Statistiques des réclamations{% endblock %}
+
+{% block body %}
+    <h1>Statistiques des réclamations</h1>
+
+<div id="reclamation-chart-container">
+    <canvas id="reclamation-chart" width="800" height="400"></canvas>
+</div>
+
+<script src="{{ asset('back/vendor/chart.js/Chart.min.js') }}"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        // Votre code JavaScript pour initialiser le graphique Chart.js
+        var statisticsData = {{ statisticsData|json_encode|raw }};
+        var dates = Object.keys(statisticsData);
+        var counts = Object.values(statisticsData);
+
+        var ctx = document.getElementById('reclamation-chart').getContext('2d');
+        var myChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: dates,
+                datasets: [{
+                    label: 'Nombre de réclamations',
+                    data: counts,
+                    backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    });
+</script>
+
+{% endblock %}

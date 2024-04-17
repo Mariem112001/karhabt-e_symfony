@@ -1,0 +1,95 @@
+{% extends 'baseFront.html.twig' %}
+
+{% block title %} 
+    Liste des réclamations
+{% endblock %}
+
+{% block body %}
+    <div class="center-element" style="margin-bottom: 20px;">
+        <div class="center-text">
+            <h1 style="color: #4F79C7;">Mes réclamations</h1>
+        </div>
+    </div>
+
+    <form method="get" action="{{ path('app_reclamation_index') }}" class="form-inline justify-content-center mb-4">
+        <div class="form-group mr-3">
+            <label for="dateReclamation" class="mr-2">Sélectionner une date de réclamation:</label>
+            <input type="text" id="dateReclamation" name="dateReclamation" class="form-control datepicker">
+        </div>
+        <button type="submit" class="btn btn-primary">Rechercher</button>
+    </form>
+
+    <div class="table-responsive">
+        <table class="table table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th style="color: #4F79C7;">Sujet</th>
+                    <th style="color: #4F79C7;">Description</th>
+                    <th style="color: #4F79C7;">Date de réclamation</th>
+                    <th style="color: #4F79C7;">Email de l'utilisateur</th>
+                    <th style="color: #4F79C7;">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for reclamation in pagination %}
+                    <tr>
+                        <td>{{ reclamation.sujet }}</td>
+                        <td>{{ reclamation.description }}</td>
+                        <td>{{ reclamation.dateReclamation ? reclamation.dateReclamation|date('Y-m-d') : '' }}</td>
+                        <td>{{ reclamation.emailUser }}</td>
+                        <td>
+                            <a href="{{ path('app_reclamation_show', {'idr': reclamation.idr}) }}" style="color: #4F79C7;">Voir</a>
+                            <a href="{{ path('app_reclamation_edit', {'idr': reclamation.idr}) }}" style="color: #4F79C7;">Modifier</a>
+                        </td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="5">Aucune réclamation trouvée.</td>
+                    </tr>
+                {% endfor %}
+                
+                {% if noReclamationsFound %}
+                    <tr>
+                        <td colspan="5">Aucune réclamation trouvée pour cette date.</td>
+                    </tr>
+                {% endif %}
+            </tbody>
+        </table>
+    </div>
+
+    <div class="row justify-content-center">
+        <nav aria-label="Page navigation">
+            <ul class="pagination pagination-lg">
+                {{ knp_pagination_render(pagination) }}
+            </ul>
+        </nav>
+    </div>
+
+    <div class="text-center">
+        <a href="{{ path('app_reclamation_new') }}" class="btn btn-primary" style="background-color: #4F79C7; border-color: #4F79C7;">Nouvelle réclamation</a>
+    </div>
+
+{% endblock %}
+
+{% block js %}
+    {{ parent() }}
+
+    <!-- Inclure jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- Inclure jQuery UI (DatePicker dépend de jQuery UI) -->
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+
+    <!-- JavaScript pour initialiser le DatePicker -->
+    <script>
+    $(document).ready(function(){
+        $('.datepicker').datepicker({
+            dateFormat: 'yy-mm-dd', // Format de date
+            // Autres options du DatePicker
+        });
+    });
+    </script>
+
+
+
+{% endblock %}

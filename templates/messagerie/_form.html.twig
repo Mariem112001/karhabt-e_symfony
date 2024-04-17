@@ -1,0 +1,13 @@
+{% block body %}
+    {{ form_start(form, {'attr': {'class': 'my-form'}}) }}
+        {{ form_row(form.contenu, {'attr': {'class': 'form-control'}}) }}
+    
+        {# Champ 'deleted' invisible #}
+        {{ form_row(form.deleted, {'label': false, 'attr': {'style': 'display:none;'}}) }}
+        
+        {# Champ 'vu' invisible #}
+        {{ form_row(form.vu, {'label': false, 'attr': {'style': 'display:none;'}}) }}
+        
+        <button class="btn btn-primary">Envoyer</button>
+    {{ form_end(form) }}
+{% endblock %}

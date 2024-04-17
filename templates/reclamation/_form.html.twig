@@ -1,0 +1,77 @@
+{% extends 'baseFront.html.twig' %}
+
+{% block title %}
+    Nouvelle réclamation
+{% endblock %}
+
+{% block body %}
+    <div class="container-fluid" >
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+              <h4 style="text-align: center; font-style: italic; color: #4F79C7; margin-top: 100px;">Votre réclamation est importante pour nous</h4>
+
+
+                {% if form_errors(form) is not empty %}
+                    <div class="alert alert-danger">
+                        {% for error in form_errors(form) %}
+                            {{ error.message }}
+                        {% endfor %}
+                    </div>
+                {% endif %}
+
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-12">
+                           {{ form_start(form,{'attr': {'novalidate': 'novalidate'}} ) }} 
+                            <div class="form-group mb-4">
+                                {{ form_label(form.sujet, null, {'label_attr': {'style': 'color: #4F79C7; width: 2%;'}}) }}
+                                {{ form_widget(form.sujet, {'attr': {'class': 'form-control', 'style': 'width: 50%'}}) }}
+                                <div style="color: red;">
+                                    {{ form_errors(form.sujet) }}
+                                </div>
+                            </div>
+                            <div class="form-group mb-4">
+                                {{ form_label(form.description, null, {'label_attr': {'style': 'color: #4F79C7; width: 2%;'}}) }}
+                                {{ form_widget(form.description, {'attr': {'class': 'form-control', 'style': 'width: 80%'}}) }}
+                                <div style="color: red;">
+                                    {{ form_errors(form.description) }}
+                                </div>
+                            </div>
+                            <div class="form-group mb-4">
+                                {{ form_label(form.emailUser, null, {'label_attr': {'style': 'color: #4F79C7; width: 20%;'}}) }}
+                                {{ form_widget(form.emailUser, {'attr': {'class': 'form-control', 'style': 'width: 80%'}}) }}
+                                <div style="color: red;">
+                                    {{ form_errors(form.emailUser) }}
+                                </div>
+                            </div>
+                           <button type="submit" class="btn btn-outline-primary" style="margin-bottom: 50px;">Envoyer</button>
+
+                            {{ form_end(form) }}
+                            {% if app.flashes('error') is not empty %}
+                                <div class="alert alert-danger" style="margin-top: 10px;">
+                                    Une réclamation avec les mêmes données existe déjà.
+                                    {{ app.flashes('error')|first }}
+                                </div>
+                            {% endif %}
+                            {% if app.flashes('success') is not empty %}
+                                <div class="alert alert-success" style="margin-top: 10px;">
+                                    Votre réclamation est envoyée avec succès
+                                    {{ app.flashes('success')|first }}
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+            <img src="{{ asset('images/voiture.png') }}" alt="image d'une voiture" class="img-fluid" style="margin-top: 130px; margin-left: 0px; width: 600px; height: 500;">
+
+
+            </div>
+        </div>
+    </div>
+
+    <div style="border: 1px solid #ccc; padding: 10px; margin-top: 20px; position: fixed; bottom: 0; width: 100%; background-color: #f9f9f9; text-align: center;">
+        <a href="{{ path('app_reclamation_index') }}" style="text-decoration: none;">Mes réclamations</a>
+    </div>
+{% endblock %}
