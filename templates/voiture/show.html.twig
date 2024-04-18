@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+
+<title>Voiture</title>
+
+{% block body %}
+    <h1>Voiture</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Idv</th>
+                <td>{{ voiture.idv }}</td>
+            </tr>
+            <tr>
+                <th>Marque</th>
+                <td>{{ voiture.marque }}</td>
+            </tr>
+            <tr>
+                <th>Modele</th>
+                <td>{{ voiture.modele }}</td>
+            </tr>
+            <tr>
+                <th>Couleur</th>
+                <td>{{ voiture.couleur }}</td>
+            </tr>
+            <tr>
+                <th>Prix</th>
+                <td>{{ voiture.prix }}</td>
+            </tr>
+            <tr>
+                <th>Img</th>
+                <td>{{ voiture.img }}</td>
+            </tr>
+            <tr>
+                <th>Description</th>
+                <td>{{ voiture.description }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_voiture_index') }}">back to list</a>
+
+    <a href="{{ path('app_voiture_edit', {'idv': voiture.idv}) }}">edit</a>
+
+    {{ include('voiture/_delete_form.html.twig') }}
+{% endblock %}

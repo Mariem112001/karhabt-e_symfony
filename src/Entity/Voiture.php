@@ -4,6 +4,9 @@ namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 
+use Symfony\Component\Validator\Constraints as Assert;
+
+
 #[ORM\Table(name: "voiture")]
 #[ORM\Entity]
 class Voiture
@@ -14,22 +17,31 @@ class Voiture
     private $idv;
 
     #[ORM\Column(name: "marque", type: "string", length: 50, nullable: true, options: ["default" => "NULL"])]
-    private $marque = 'NULL';
+    #[Assert\NotBlank(message: "La marque ne peut pas être vide.")]
+    private $marque;
 
     #[ORM\Column(name: "modele", type: "string", length: 50, nullable: true, options: ["default" => "NULL"])]
-    private $modele = 'NULL';
+    #[Assert\NotBlank(message: "Le modèle ne peut pas être vide.")]
+    private $modele;
 
     #[ORM\Column(name: "couleur", type: "string", length: 20, nullable: true, options: ["default" => "NULL"])]
-    private $couleur = 'NULL';
+    #[Assert\NotBlank(message: "Le couleur ne peut pas être vide.")]
+    private $couleur;
 
     #[ORM\Column(name: "prix", type: "decimal", precision: 10, scale: 2, nullable: true, options: ["default" => "NULL"])]
-    private $prix = 'NULL';
+    #[Assert\NotBlank(message: "Le prix ne peut pas être vide.")]
+    #[Assert\Positive(message: "le prix doit etre un nombre positif")]
+    private $prix;
 
     #[ORM\Column(name: "img", type: "string", length: 255, nullable: false)]
+    
+
+
     private $img;
 
     #[ORM\Column(name: "description", type: "text", length: 65535, nullable: true, options: ["default" => "NULL"])]
-    private $description = 'NULL';
+    #[Assert\NotBlank(message: "La description ne doit pas etre vide")]
+    private $description;
 
     public function getIdv(): ?int
     {
@@ -107,4 +119,5 @@ class Voiture
 
         return $this;
     }
+    
 }
