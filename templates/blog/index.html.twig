@@ -1,0 +1,47 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Home Page!{% endblock %}
+
+{% block body %}
+<style>
+    .articles{
+        border-radius: 10px;
+        box-shadow: 0 4px 16px rgba(0,0,0,0.25);
+        padding: 16px 20px;
+    }
+    img{
+        border-radius:10px;
+        box-shadow: 0 4px 16px rgba(0,0,0,0.25);
+        margin: 10px;
+    }
+</style>
+
+{% for article in articles %}
+
+<section class="articles mt-5">
+    <article class="mb-5">
+        <h2>{{article.title}}</h2>
+        <div class="metadata">
+            Published on {{article.createdAt | date('d-m-Y') }}at {{article.createdAt | date('H:i')}}
+            <span class="badge badge-danger">
+                {{article.category.title}}
+            </span>
+           
+        </div>
+        <div class="content">
+             {% if article.image %}
+                        <img src="{{ asset('uploads/articles/' ~ article.image) }}" alt="Article Image" style="width: 100px; height: auto;">
+                    {% else %}
+                        No image
+                    {% endif %}
+            <a class="btn btn-info" href="{{ path('article_show', {'id' : article.id}) }}">read more</a>
+        </div>
+    </article>
+</section>
+
+
+{% endfor %}
+<div class="navigation mt-5">
+  {{ knp_pagination_render(articles) }}
+</div>
+{% endblock %}

@@ -1,0 +1,39 @@
+{% extends "layout.html.twig" %}
+
+{% block title %}Category index{% endblock %}
+{% block stylesheets %}
+  <link href="{{ asset("back/vendor/datatables/dataTables.bootstrap4.min.css") }}" rel="stylesheet">
+{% endblock %}
+{% block body %}
+    <h1>Category index</h1>
+
+    <table class="table table-bordered" id="userTable" width="100%" cellspacing="0">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Title</th>
+                <th>Description</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for category in categories %}
+            <tr>
+                <td>{{ category.id }}</td>
+                <td>{{ category.title }}</td>
+                <td>{{ category.description }}</td>
+                <td>
+                    <a href="{{ path('app_category_show', {'id': category.id}) }}">show</a>
+                    <a href="{{ path('app_category_edit', {'id': category.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="4">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_category_new') }}">Create new</a>
+{% endblock %}
