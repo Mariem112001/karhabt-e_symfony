@@ -187,6 +187,7 @@ class User implements UserInterface
             // set the owning side to null (unless already changed)
             if ($article->getUser() === $this) {
                 $article->setUser(null);
+                
             }
         }
 

@@ -34,7 +34,7 @@ private $title;
 
    /**
  * @ORM\Column(type="string", length=255)
- * @Assert\NotBlank(message="Le continue  ne peut pas être vide")
+ * @Assert\NotBlank(message="Le continue  ne peut pas être videeeee")
  * @Assert\Length(
  *     min = 30,
  *     
