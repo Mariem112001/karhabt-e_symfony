@@ -21,17 +21,19 @@ class Comment
     /**
      * @ORM\Column(type="string", length=255)
      * @Assert\NotBlank(
-     * message="please add your name!"
+     * message="please add your name!.. "
      * )
      */
     private $author;
 
-    
-
-      /**
-     * @ORM\Column(type="string", length=255)
-     * @Assert\NotNull()
+    /**
+     * @ORM\Column(type="text")
+     * @Assert\NotBlank(
+     * message="please add your comment!"
+     * )
      */
+
+     
     private $content;
 
     /**
