@@ -1,0 +1,34 @@
+{% extends 'baseFront.html.twig' %}
+
+{% block title %} 
+    Réponses à la réclamation - {{ reclamation.sujet }}
+{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <h1 class="text-center mt-5 mb-4">Réponses à la réclamation - {{ reclamation.sujet }}</h1>
+        
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                {% if responses %}
+                    <ul class="list-group">
+                        {% for response in responses %}
+                            <li class="list-group-item">
+                                <p class="mb-1">{{ response.contenuReponse }}</p>
+                                <small class="text-muted">Date de la réponse : {{ response.dateReponseR|date('Y-m-d') }}</small>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% else %}
+                    <p class="text-center mt-4">Aucune réponse n'a été trouvée pour cette réclamation.</p>
+                {% endif %}
+            </div>
+        </div>
+        
+        <div class="row justify-content-center mt-4">
+            <div class="col-md-8">
+                <a href="{{ path('app_reclamation_index') }}" class="btn btn-primary">Retour</a>
+            </div>
+        </div>
+    </div>
+{% endblock %}

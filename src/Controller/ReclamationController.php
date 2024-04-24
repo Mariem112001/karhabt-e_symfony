@@ -19,7 +19,7 @@ use DateTime;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use App\Repository\ReclamationRepository;
-
+use App\Repository\ReponseReclamationRepository;
 
 
 
@@ -33,44 +33,54 @@ class ReclamationController extends AbstractController
  // Dans votre contrôleur ReclamationController
 
 
-public function index(Request $request, EntityManagerInterface $entityManager, PaginatorInterface $paginator): Response
-{
-    // Initialiser la requête pour récupérer les réclamations
-    $queryBuilder = $entityManager->getRepository(Reclamation::class)->createQueryBuilder('r');
-
-    // Filtrer les réclamations par date de réclamation si une date est sélectionnée dans le formulaire
-    if ($dateReclamation = $request->query->get('dateReclamation')) {
-        $date = new DateTime($dateReclamation);
-        $queryBuilder
-            ->andWhere('r.dateReclamation = :date')
-            ->setParameter('date', $date);
-    }
-
-    // Filtrer les réclamations par ID utilisateur (24)
-    $queryBuilder
-        ->andWhere('r.user = :userId')
-        ->setParameter('userId', 28);
-
-    // Créer la requête
-    $query = $queryBuilder->orderBy('r.dateReclamation', 'DESC')->getQuery();
-
-    // Paginer les résultats
-    $pagination = $paginator->paginate(
-        $query,
-        $request->query->getInt('page', 1),
-        5
-    );
-
-    // Passer une variable indiquant si des réclamations ont été trouvées
-    $noReclamationsFound = ($pagination->getTotalItemCount() === 0);
-
-    // Rendre la vue avec les résultats paginés et le formulaire de recherche
-    return $this->render('reclamation/index.html.twig', [
-        'pagination' => $pagination,
-        'noReclamationsFound' => $noReclamationsFound,
-    ]);
-}
-
+ public function index(Request $request, EntityManagerInterface $entityManager, PaginatorInterface $paginator): Response
+ {
+     // Initialiser la requête pour récupérer les réclamations
+     $queryBuilder = $entityManager->getRepository(Reclamation::class)->createQueryBuilder('r');
+ 
+     // Filtrer les réclamations par date de réclamation si une date est sélectionnée dans le formulaire
+     if ($dateReclamation = $request->query->get('dateReclamation')) {
+         $date = new DateTime($dateReclamation);
+         $queryBuilder
+             ->andWhere('r.dateReclamation = :date')
+             ->setParameter('date', $date);
+     }
+ 
+     // Filtrer les réclamations par ID utilisateur (24)
+     $queryBuilder
+         ->andWhere('r.user = :userId')
+         ->setParameter('userId', 28);
+ 
+     // Tri par date ou par sujet (ordre alphabétique)
+     $orderBy = $request->query->get('orderBy', 'date');
+     $orderDirection = $request->query->get('orderDirection', 'desc');
+ 
+     if ($orderBy === 'date') {
+         $queryBuilder->orderBy('r.dateReclamation', $orderDirection);
+     } elseif ($orderBy === 'sujet') {
+         $queryBuilder->orderBy('r.sujet', $orderDirection);
+     }
+ 
+     // Créer la requête
+     $query = $queryBuilder->getQuery();
+ 
+     // Paginer les résultats
+     $pagination = $paginator->paginate(
+         $query,
+         $request->query->getInt('page', 1),
+         5
+     );
+ 
+     // Passer une variable indiquant si des réclamations ont été trouvées
+     $noReclamationsFound = ($pagination->getTotalItemCount() === 0);
+ 
+     // Rendre la vue avec les résultats paginés et le formulaire de recherche
+     return $this->render('reclamation/index.html.twig', [
+         'pagination' => $pagination,
+         'noReclamationsFound' => $noReclamationsFound,
+     ]);
+ }
+ 
     
     
 #[Route('/all', name: 'app_reclamation_index_all', methods: ['GET', 'POST'])]
@@ -228,6 +238,22 @@ $reclamation->setUser($user);
 
         return $this->redirectToRoute('app_reclamation_index', [], Response::HTTP_SEE_OTHER);
     }
+
+
+    #[Route('/{idr}/response', name: 'app_reclamation_response', methods: ['GET'])]
+    public function showResponse(Reclamation $reclamation, ReponseReclamationRepository $reponseReclamationRepository): Response
+    {
+        // Récupérer toutes les réponses associées à cette réclamation
+        $responses = $reponseReclamationRepository->findResponsesByReclamationId($reclamation->getIdr());
+    
+        // Rendre la vue avec les réponses
+        return $this->render('reclamation/response.html.twig', [
+            'reclamation' => $reclamation,
+            'responses' => $responses,
+        ]);
+    }
+  
+    
 
 
     #[Route('/reclamation/statistics', name: 'app_reclamation_statistics')]
