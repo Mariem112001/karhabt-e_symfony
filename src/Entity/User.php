@@ -1,69 +1,94 @@
 <?php
 
 namespace App\Entity;
-
-use App\Repository\UserRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 
-/**
- * @ORM\Entity(repositoryClass=UserRepository::class)
- */
-class User implements UserInterface
+#[ORM\Table(name: "user")]
+#[ORM\Entity]
+class User
 {
-    /**
-     * @ORM\Id
-     * @ORM\GeneratedValue
-     * @ORM\Column(type="integer")
-     */
-    private $id;
+    #[ORM\Id]
+    #[ORM\GeneratedValue(strategy: "IDENTITY")]
+    #[ORM\Column(name: "idU", type: "integer", nullable: false)]
+    private ?int $idu = null;
 
-    /**
-     * @ORM\Column(type="string", length=180, unique=true)
-     */
-    private $email;
+    #[ORM\Column(name: "nom", type: "string", length: 255, nullable: true, options: ["default" => "NULL"])]
+    private ?string $nom = null;
 
-    /**
-     * @ORM\Column(type="json")
-     */
-    private $roles = [];
+    #[ORM\Column(name: "prenom", type: "string", length: 255, nullable: true, options: ["default" => "NULL"])]
+    private ?string $prenom = null;
 
-    /**
-     * @var string The hashed password
-     * @ORM\Column(type="string")
-     * @Assert\Length(
-     * min = 6,
-     * minMessage = "password must be 6 caracteres min"
-     * )
-     */
-    private $password;
+    #[ORM\Column(name: "DateNaissance", type: "date", nullable: true, options: ["default" => "NULL"])]
+    private ?\DateTimeInterface $dateNaissance = null;
 
-    /**
-     * @ORM\Column(type="string", length=255)
-     */
-    private $firstName;
+    #[ORM\Column(name: "numTel", type: "integer", nullable: true, options: ["default" => "NULL"])]
+    private ?int $numTel = null;
 
-    /**
-     * @ORM\Column(type="string", length=255)
-     */
-    private $lastName;
+    #[ORM\Column(name: "eMAIL", type: "string", length: 255, nullable: true, options: ["default" => "NULL"])]
+    private ?string $email = null;
 
-    /**
-     * @ORM\OneToMany(targetEntity=Article::class, mappedBy="user")
-     */
-    private $articles;
+    #[ORM\Column(name: "passwd", type: "string", length: 255, nullable: true, options: ["default" => "NULL"])]
+    private ?string $passwd = null;
 
-    public function __construct()
+    #[ORM\Column(name: "role", type: "string", length: 0, nullable: true, options: ["default" => "NULL"])]
+    private ?string $role = null;
+
+    #[ORM\Column(name: "imageUser", type: "string", length: 255, nullable: false)]
+    private ?string $imageUser = null;
+
+    public function getIdu(): ?int
     {
-        $this->articles = new ArrayCollection();
+        return $this->idu;
     }
 
-    public function getId(): ?int
+    public function getNom(): ?string
     {
-        return $this->id;
+        return $this->nom;
+    }
+
+    public function setNom(?string $nom): static
+    {
+        $this->nom = $nom;
+
+        return $this;
+    }
+
+    public function getPrenom(): ?string
+    {
+        return $this->prenom;
+    }
+
+    public function setPrenom(?string $prenom): static
+    {
+        $this->prenom = $prenom;
+
+        return $this;
+    }
+
+    public function getDateNaissance(): ?\DateTimeInterface
+    {
+        return $this->dateNaissance;
+    }
+
+    public function setDateNaissance(?\DateTimeInterface $dateNaissance): static
+    {
+        $this->dateNaissance = $dateNaissance;
+
+        return $this;
+    }
+
+    public function getNumTel(): ?int
+    {
+        return $this->numTel;
+    }
+
+    public function setNumTel(?int $numTel): static
+    {
+        $this->numTel = $numTel;
+
+        return $this;
     }
 
     public function getEmail(): ?string
@@ -71,125 +96,45 @@ class User implements UserInterface
         return $this->email;
     }
 
-    public function setEmail(string $email): self
+    public function setEmail(?string $email): static
     {
         $this->email = $email;
 
         return $this;
     }
 
-    /**
-     * A visual identifier that represents this user.
-     *
-     * @see UserInterface
-     */
-    public function getUsername(): string
+    public function getPasswd(): ?string
     {
-        return (string) $this->email;
+        return $this->passwd;
     }
 
-    /**
-     * @see UserInterface
-     */
-    public function getRoles(): array
+    public function setPasswd(?string $passwd): static
     {
-        $roles = $this->roles;
-        // guarantee every user at least has ROLE_USER
-        $roles[] = 'ROLE_USER';
-
-        return array_unique($roles);
-    }
-
-    public function setRoles(array $roles): self
-    {
-        $this->roles = $roles;
+        $this->passwd = $passwd;
 
         return $this;
     }
 
-    /**
-     * @see UserInterface
-     */
-    public function getPassword(): string
+    public function getRole(): ?string
     {
-        return (string) $this->password;
+        return $this->role;
     }
 
-    public function setPassword(string $password): self
+    public function setRole(?string $role): static
     {
-        $this->password = $password;
+        $this->role = $role;
 
         return $this;
     }
 
-    /**
-     * @see UserInterface
-     */
-    public function getSalt()
+    public function getImageUser(): ?string
     {
-        // not needed when using the "bcrypt" algorithm in security.yaml
+        return $this->imageUser;
     }
 
-    /**
-     * @see UserInterface
-     */
-    public function eraseCredentials()
+    public function setImageUser(string $imageUser): static
     {
-        // If you store any temporary, sensitive data on the user, clear it here
-        // $this->plainPassword = null;
-    }
-
-    public function getFirstName(): ?string
-    {
-        return $this->firstName;
-    }
-
-    public function setFirstName(string $firstName): self
-    {
-        $this->firstName = $firstName;
-
-        return $this;
-    }
-
-    public function getLastName(): ?string
-    {
-        return $this->lastName;
-    }
-
-    public function setLastName(string $lastName): self
-    {
-        $this->lastName = $lastName;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection|Article[]
-     */
-    public function getArticles(): Collection
-    {
-        return $this->articles;
-    }
-
-    public function addArticle(Article $article): self
-    {
-        if (!$this->articles->contains($article)) {
-            $this->articles[] = $article;
-            $article->setUser($this);
-        }
-
-        return $this;
-    }
-
-    public function removeArticle(Article $article): self
-    {
-        if ($this->articles->removeElement($article)) {
-            // set the owning side to null (unless already changed)
-            if ($article->getUser() === $this) {
-                $article->setUser(null);
-                
-            }
-        }
+        $this->imageUser = $imageUser;
 
         return $this;
     }
