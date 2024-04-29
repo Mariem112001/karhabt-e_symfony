@@ -1,0 +1,54 @@
+{% extends 'baseF.html.twig' %}
+
+{% block title %}Dossier Details{% endblock %}
+
+{% block body %}
+    <div class="container-fluid">
+        <h1 class="h3 mb-2 text-gray-800">Dossier Details</h1>
+
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-primary">Dossier Information</h6>
+            </div>
+            <div class="card-body">
+                <table class="table">
+                    <tbody>
+                        <tr>
+                            <th>Id</th>
+                            <td>{{ dossier.id }}</td>
+                        </tr>
+                        <tr>
+                            <th>CIN</th>
+                            <td>{{ dossier.cin }}</td>
+                        </tr>
+                        <tr>
+                            <th>Nom</th>
+                            <td>{{ dossier.nom }}</td>
+                        </tr>
+                        <tr>
+                            <th>Prénom</th>
+                            <td>{{ dossier.prenom }}</td>
+                        </tr>
+                        <tr>
+                            <th>Région</th>
+                            <td>{{ dossier.region }}</td>
+                        </tr>
+                        <tr>
+                            <th>Date de Naissance</th>
+                            <td>{{ dossier.date|date('d-m-Y') }}</td>
+                        </tr>
+                        <tr>
+                            <th>Montant</th>
+                            <td>{{ dossier.montant }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div>
+                    <a href="{{ path('app_dossier_index', {id: dossier.demandeDossier.id}) }}" class="btn btn-primary mr-2">Retour</a>
+                    <a href="{{ path('app_dossier_delete', {id: dossier.id}) }}" class="btn btn-danger mr-2">Supprimer</a>
+                    <a class="text-success font-weight-bold">Verifier</a>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

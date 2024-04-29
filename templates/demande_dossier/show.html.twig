@@ -1,0 +1,73 @@
+{% extends 'baseB.html.twig' %}
+
+{% block title %}DemandeDossier{% endblock %}
+
+{% block body %}
+    <div class="container-fluid">
+
+        <!-- Page Heading -->
+        <h1 class="h3 mb-2 text-gray-800">Tables</h1>
+
+        <!-- DataTales Example -->
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-primary">DataTables Example</h6>
+            </div>
+            <div class="card-body">
+
+                <table class="table">
+                    <tbody>
+                    <tr>
+                        <th>Id</th>
+                        <td>{{ demande_dossier.id }}</td>
+                    </tr>
+                    <tr>
+                        <th>Urlcin</th>
+                        <td><img src="{{ demande_dossier.urlcin }}" alt="Cin"/></td>
+                    </tr>
+                    <tr>
+                        <th>Urlcerretenu</th>
+                        <td>
+                            <img
+                                    src="{{ demande_dossier.urlcerretenu }}"
+                                    alt="Cerretenu"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Urlatttravail</th>
+                        <td>
+                            <img
+                                    src="{{ demande_dossier.urlatttravail }}"
+                                    alt="Atttravail"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Urldecrevenu</th>
+                        <td>
+                            <img
+                                    src="{{ demande_dossier.urldecrevenu }}"
+                                    alt="Decrevenu"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Urlextnaissance</th>
+                        <td>
+                            <img
+                                    src="{{ demande_dossier.urlextnaissance }}"
+                                    alt="Extnaissance"/>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+                <div>
+                    <a href="{{ path('app_demande_back_dossier_index', {id: demande_dossier.id}) }}"
+                       class="btn btn-primary mr-2">Retour</a>
+                    <a href="{{ path('app_demande_back_dossier_delete', {id: demande_dossier.id}) }}"
+                       class="btn btn-danger mr-2">Supprimer</a>
+                    <a class="text-success font-weight-bold">Verifier</a>
+                </div>
+
+            </div>
+        </div>
+    </div>
+{% endblock %}

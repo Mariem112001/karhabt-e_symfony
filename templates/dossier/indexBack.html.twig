@@ -1,0 +1,117 @@
+{% extends 'baseB.html.twig' %}
+
+{% block title %}Dossier index{% endblock %}
+
+{% block body %}
+
+<style>
+
+.pagination {
+    background-color: #007bff; /* Couleur de fond */
+    color: #fff; /* Couleur du texte */
+    border-color: #007bff; /* Couleur de la bordure */
+    display: inline-block; /* Affichage en ligne */
+    padding: 6px 12px; /* Espacement intérieur */
+    margin: 0; /* Marge extérieure */
+    border-radius: 4px; /* Rayon de la bordure */
+}
+
+.pagination a {
+    color: #fff; /* Couleur du texte des liens */
+    text-decoration: none; /* Supprimer le soulignement des liens */
+}
+
+.pagination a:hover {
+    background-color: #0056b3; /* Couleur de fond au survol */
+}
+
+.pagination .active {
+    background-color: #0056b3; /* Couleur de fond de l'élément actif */
+    border-color: #0056b3; /* Couleur de la bordure de l'élément actif */
+}
+
+</style>
+  <form
+                        class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
+                    <div class="input-group">
+                        <input type="text" class="form-control bg-light border-0 small" placeholder="Search for..."
+                               aria-label="Search" aria-describedby="basic-addon2">
+                        <div class="input-group-append">
+                            <button class="btn btn-primary" type="button">
+                                <i class="fas fa-search fa-sm"></i>
+                            </button>
+                        </div>
+                    </div>
+                </form>
+
+
+
+
+
+                
+    <!-- Begin Page Content -->
+ 
+    <!-- Topbar Search -->
+              
+    <div class="container-fluid">
+
+
+        <!-- DataTales Example -->
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-primary">DataTables Example</h6>
+            </div>
+
+               
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                        <thead>
+                        <tr>
+                            <th>CIN</th>
+                            <th>NOM</th>
+                            <th>PRENOM</th>
+                            <th>REGION</th>
+                            <th>DATE</th>
+                            <th>MONTANT</th>
+                            <th>Action</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for dossier in dossiers %}
+                            <tr>
+                                <td>{{ dossier.cin }}</td>
+                                <td>{{ dossier.nom }}</td>
+                                <td>{{ dossier.prenom }}</td>
+                                <td>{{ dossier.region }}</td>
+                                <td>{{ dossier.date|date('d/m/Y') }}</td>
+                                <td>{{ dossier.montant }}</td>
+                                <td class="text-success">Verifier
+
+                                <a class="btn btn-danger" style="border-radius: 10px" href="{{ path('app_dossier_back_delete', {id: dossier.id}) }}">
+     Supprimer
+    </a>
+                                         </td>
+                            </tr>
+                            
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <!-- /.container-fluid -->
+   <li class="dropdown" style="list-style: none; margin-bottom: 100px; display:flex; justify-content: center  ">
+        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" style="color: #91DAF0; font-size: 25px; ">Trier les bon d'achats <span class="caret"></span></a>
+            <ul class="dropdown-menu" style="background-color: #FEFCF3; border: none;">
+                <li><a href="{{ path('dossiers_date')}}" style="color: #F9A936; text-decoration: none; font-size: 20px;">Tri par date</a></li> 
+  <li><a href="{{ path('dossiers_cin')}}" style="color: #F26A77; text-decoration: none; font-size: 20px;">Tri par cin</a></li> 
+
+    </li>
+
+    </div>
+ 
+
+{% endblock %}

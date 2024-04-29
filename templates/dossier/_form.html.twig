@@ -1,0 +1,100 @@
+{{ form_start(form) }}
+{{ form_widget(form._token) }}
+<form class="d-flex flex-column" style="gap: 100px; width: 200px"  >
+
+
+    <div class="form-group" >
+        <label
+                for="dossier_cin{{ dossier.id }}"
+                class="text-white" >
+            {{ form_label(form.cin) }}
+        </label>
+
+
+        <input
+  
+
+
+                name="{{ field_name(form.cin) }}"
+                type="number" class="form-control" id="dossier_cin{{ dossier.id }}"
+                value="{{ dossier.cin }}"
+                placeholder="{{ field_label(form.cin) }}"
+  >
+        <span class="text-danger">{{ form_errors(form.cin) }}</span>
+    </div>
+    <div class="form-group">
+        <label for="dossier_nom{{ dossier.id }}"  class="text-white    ">{{ form_label(form.nom) }}</label>
+        <input  
+
+
+                name="{{ field_name(form.nom) }}"
+                type="text" class="form-control" id="dossier_nom{{ dossier.id }}"
+                value="{{ dossier.nom }}"
+                placeholder="{{ field_label(form.nom) }}">
+        <span class="text-danger">{{ form_errors(form.nom) }}</span>
+    </div>
+    <div class="form-group">
+        <label for="dossier_prenom{{ dossier.id }}" class="text-white">{{ form_label(form.prenom) }}</label>
+        <input
+                name="{{ field_name(form.prenom) }}"
+                type="text" class="form-control" id="dossier_prenom{{ dossier.id }}"
+                value="{{ dossier.prenom }}"
+                placeholder="{{ field_label(form.prenom) }}"
+>
+        <span class="text-danger">{{ form_errors(form.prenom) }}</span>
+    </div>
+    <div class="form-group">
+        <label for="dossier_region{{ dossier.id }}" class="text-white">{{ form_label(form.region) }}</label>
+        <input
+                name="{{ field_name(form.region) }}"
+                type="text" class="form-control" id="dossier_region{{ dossier.id }}"
+                value="{{ dossier.region }}"
+                placeholder="{{ field_label(form.region) }}">
+        <span class="text-danger">{{ form_errors(form.region) }}</span>
+    </div>
+    <div class="form-group">
+        <label for="dossier_date{{ dossier.id }}" class="text-white">{{ form_label(form.date) }}</label>
+        <input
+                type="date"
+                class="form-control"
+                id="dossier_date{{ dossier.id }}"
+                value="{{ field_value(form.date) }}"
+                name="{{ field_name(form.date) }}"
+                placeholder="{{ field_label(form.date) }}"
+        >
+        <span class="text-danger">{{ form_errors(form.date) }}</span>
+    </div>
+    <div class="form-group">
+        <label for="dossier_montant{{ dossier.id }}" class="text-white">{{ form_label(form.montant) }}</label>
+        <input
+                placeholder="{{ field_label(form.montant) }}"
+                name="{{ field_name(form.montant) }}"
+                value="{{ field_value(form.montant) }}"
+                type="number" class="form-control" id="dossier_montant{{ dossier.id }}
+               placeholder="{{ field_label(form.montant) }}">
+        <span class="text-danger">{{ form_errors(form.montant) }}</span>
+    </div>
+
+    <div class="form-group">
+        <label for="dossier_demande{{ dossier.id }}" class="text-white">{{ form_label(form.montant) }}</label>
+        <select
+                name="{{ field_name(form.demandeDossier) }}"
+                class="form-control"
+                id="dossier_demande{{ dossier.id }}">
+            <option value="">Selectionner une demande</option>
+            {% for demande in demandeDossiers %}
+                <option {{ demande.id == field_value(form.demandeDossier) ? 'selected' : '' }}
+                        value="{{ demande.id }}">{{ demande.id }}</option>
+            {% endfor %}
+        </select>
+        <span class="text-danger">{{ form_errors(form.demandeDossier) }}</span>
+         {% if qrCodeData %}
+        <img src="{{asset ('qrCodeData') }}" alt="QR Code">
+    {% endif %}
+    </div>
+   
+    <button type="submit" class="btn btn-primary">Submit</button>
+</form>
+
+
+{{ form_end(form) }}

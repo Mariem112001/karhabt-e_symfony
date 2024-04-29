@@ -2,35 +2,47 @@
 
 namespace App\Entity;
 
+use App\Repository\DemandeDossierRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
-
-#[ORM\Entity]
-class Demandedossier
+#[ORM\Entity(repositoryClass: DemandeDossierRepository::class)]
+class DemandeDossier
 {
     #[ORM\Id]
-    #[ORM\GeneratedValue(strategy: "IDENTITY")]
-    #[ORM\Column(name: "id_demande", type: "integer", nullable: false)]
-    private $idDemande;
+    #[ORM\GeneratedValue]
+    #[ORM\Column]
+    private ?int $id = null;
 
-    #[ORM\Column(name: "urlcin", type: "string", length: 500, nullable: false)]
-    private $urlcin;
+    #[ORM\Column(length: 255)]
+    private ?string $urlcin = null;
 
-    #[ORM\Column(name: "urlCerRetenu", type: "string", length: 500, nullable: false)]
-    private $urlcerretenu;
+    #[ORM\Column(length: 255)]
+    private ?string $urlcerretenu = null;
 
-    #[ORM\Column(name: "urlAttTravail", type: "string", length: 500, nullable: false)]
-    private $urlatttravail;
+    #[ORM\Column(length: 255)]
+    private ?string $urlatttravail = null;
 
-    #[ORM\Column(name: "urlDecRevenu", type: "string", length: 500, nullable: false)]
-    private $urldecrevenu;
+    #[ORM\Column(length: 255)]
+    private ?string $urldecrevenu = null;
 
-    #[ORM\Column(name: "urlExtNaissance", type: "string", length: 500, nullable: false)]
-    private $urlextnaissance;
+    #[ORM\Column(length: 255)]
+    private ?string $urlextnaissance = null;
 
-    public function getIdDemande(): ?int
+    #[ORM\OneToMany(targetEntity: Dossier::class, mappedBy: 'demandeDossier')]
+    private Collection $dossier;
+
+    public function __construct()
     {
-        return $this->idDemande;
+        $this->dossier = new ArrayCollection();
+    }
+
+
+    public function getId(): ?int
+    {
+        return $this->id;
     }
 
     public function getUrlcin(): ?string
@@ -89,6 +101,36 @@ class Demandedossier
     public function setUrlextnaissance(string $urlextnaissance): static
     {
         $this->urlextnaissance = $urlextnaissance;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Dossier>
+     */
+    public function getDossier(): Collection
+    {
+        return $this->dossier;
+    }
+
+    public function addDossier(Dossier $dossier): static
+    {
+        if (!$this->dossier->contains($dossier)) {
+            $this->dossier->add($dossier);
+            $dossier->setDemandeDossier($this);
+        }
+
+        return $this;
+    }
+
+    public function removeDossier(Dossier $dossier): static
+    {
+        if ($this->dossier->removeElement($dossier)) {
+            // set the owning side to null (unless already changed)
+            if ($dossier->getDemandeDossier() === $this) {
+                $dossier->setDemandeDossier(null);
+            }
+        }
 
         return $this;
     }

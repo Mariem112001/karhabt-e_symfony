@@ -1,0 +1,81 @@
+{% extends 'baseB.html.twig' %}
+
+{% block title %}Dossier index{% endblock %}
+
+{% block body %}
+    <!-- Begin Page Content -->
+    <div class="container-fluid">
+
+        <!-- Page Heading -->
+        <h1 class="h3 mb-2 text-gray-800">Tables</h1>
+        <p class="mb-4">DataTables is a third party plugin that is used to generate the demo table below.
+            For more information about DataTables, please visit the <a target="_blank"
+                                                                       href="https://datatables.net">official DataTables
+                documentation</a>.</p>
+
+        <!-- DataTales Example -->
+        <div class="card shadow mb-4">
+         
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-primary">DataTables Example</h6>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                        <thead>
+                        <tr>
+                            <th>CIN</th>
+                            <th>Certificat Retenu</th>
+                            <th>Attestation de travail</th>
+                            <th>Déclaration des revenus</th>
+                            <th>Extrait de naissance</th>
+                            <th>Action</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for demande in demandeDossiers %}
+                            <tr>
+                                <td><a target="_blank" href="{{ demande.urlcin }}">
+                                        URL CIN
+                                    </a> </td>
+                                <td>
+                                    <a target="_blank" href="{{ demande.urlcerretenu }}">
+                                        URL Certificat Retenu
+                                    </a>
+                                </td>
+                                <td>
+                                    <a target="_blank" href="{{ demande.urlatttravail }}">
+                                        URL Attestation de travail
+                                    </a>
+                                </td>
+                                <td>
+                                    <a target="_blank" href="{{ demande.urldecrevenu }}">
+                                        URL Déclaration des revenus
+                                    </a>
+                                </td>
+                                <td>
+                                    <a target="_blank" href="{{ demande.urlextnaissance }}">
+                                        URL Extrait de naissance
+                                    </a>
+                                </td>
+                                <td ><a class="text-success font-weight-bold mr-2"
+                                       href="{{ path('app_demande_back_dossier_show', {id: demande.id}) }}">Show</a>
+                                    <a class="text-danger font-weight-bold"
+                                       href="{{ path('app_demande_back_dossier_delete', {id: demande.id}) }}">Delete</a>
+                                      
+                                </td>
+                                <td></td>
+                            </tr>
+                        {% endfor %}
+                    
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <!-- /.container-fluid -->
+
+    </div>
+{% endblock %}
