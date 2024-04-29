@@ -11,6 +11,10 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Entity\Reclamation;
+// Assurez-vous d'importer les classes Dompdf et Options depuis l'espace de noms Dompdf
+use Dompdf\Dompdf;
+use Dompdf\Options;
+
 
 #[Route('/reponse/reclamation')]
 class ReponseReclamationController extends AbstractController
@@ -108,5 +112,49 @@ public function show(ReponseReclamation $reponseReclamation): Response
         }
 
         return $this->redirectToRoute('app_reponse_reclamation_index', [], Response::HTTP_SEE_OTHER);
+    }
+    #[Route('/convert-to-pdf', name: 'convert_to_pdf', methods: ['POST'])]
+    public function convertToPdf(Request $request): Response
+    {
+        // Récupérer les données si nécessaire depuis la requête
+        // $data = $request->getContent();
+
+        // Logique de génération du contenu PDF
+        $pdfContent = $this->generatePdfContent();
+
+        // Générer le fichier PDF
+        $pdf = new Dompdf();
+        $pdf->loadHtml($pdfContent);
+
+        // (Optionnel) Configurations supplémentaires pour Dompdf
+        $options = new Options();
+        $options->set('isRemoteEnabled', true); // Activer le chargement des ressources externes (images, CSS, etc.)
+        $pdf->setOptions($options);
+
+        $pdf->render();
+
+        // Enregistrer le fichier PDF ou renvoyer directement la réponse HTTP
+        $pdfOutput = $pdf->output();
+        $pdfFilePath = 'path/to/save/pdf/statistiques_reclamations.pdf';
+        file_put_contents($pdfFilePath, $pdfOutput);
+
+        // Vous pouvez également renvoyer directement la réponse HTTP avec le contenu PDF
+        // return new Response($pdfOutput, 200, ['Content-Type' => 'application/pdf']);
+
+        // Renvoyer le chemin du fichier PDF généré
+        return $this->json(['pdfFilePath' => $pdfFilePath]);
+    }
+
+    // Exemple de méthode pour générer le contenu PDF
+    private function generatePdfContent(): string
+    {
+        // Vous pouvez mettre ici votre logique de génération du contenu PDF
+        // Par exemple, vous pouvez utiliser une vue Twig pour générer le HTML à convertir en PDF
+        $htmlContent = $this->renderView('reponseReclamation/pdf_template.html.twig', [
+            // Passer les données nécessaires à votre template Twig
+            // 'data' => $data,
+        ]);
+
+        return $htmlContent;
     }
 }

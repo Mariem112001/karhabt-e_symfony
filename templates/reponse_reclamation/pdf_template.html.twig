@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Statistiques des réclamations</title>
+    <style>
+        /* Styles CSS pour votre contenu PDF */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            border: 1px solid #333;
+            padding: 8px;
+            text-align: left;
+        }
+    </style>
+</head>
+<body>
+    <h1>Statistiques des réclamations</h1>
+    <p>Ceci est un exemple de contenu pour votre fichier PDF. Vous pouvez personnaliser ce contenu comme vous le souhaitez.</p>
+    <table>
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Nombre de réclamations</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in statisticsData %}
+                <tr>
+                    <td>{{ item.date|date('Y-m-d') }}</td>
+                    <td>{{ item.count }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>

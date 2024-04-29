@@ -1,21 +1,23 @@
 {% extends 'baseBack.html.twig' %}
 
-{% block title %}Statistiques des réclamations{% endblock %}
+{% block title %}
+    Statistiques des réclamations
+{% endblock %}
 
 {% block body %}
     <div class="container">
-        <div class="row">
-            <div class="col-md-10 offset-md-1">
+        <div class="row justify-content-center mt-5">
+            <div class="col-md-10">
                 <div class="card">
-                    <div class="card-header">
+                    <div class="card-header bg-primary text-white">
                         <h1 class="card-title text-center">Statistiques des réclamations</h1>
                     </div>
-                    <div class="text-center mt-4">
-                       <a href="{{ path('app_reclamation_index_all') }}" class="btn btn-secondary ml-2">Retour</a>
-                        <button class="btn btn-primary" id="download-csv">Télécharger</button>
-                    </div>
                     <div class="card-body">
-                        <div class="chart-container" style="position: relative; height:70vh; width:60vw;">
+                        <div class="text-center mb-4">
+                            <a href="{{ path('app_reclamation_index_all') }}" class="btn btn-secondary">Retour</a>
+                            <button class="btn btn-primary ml-2" id="download-csv">Télécharger</button>
+                        </div>
+                        <div class="chart-container" style="position: relative; height:400px; width:800px;">
                             <canvas id="reclamation-chart"></canvas>
                         </div>
                     </div>
@@ -24,89 +26,133 @@
         </div>
     </div>
 
-    <script src="{{ asset('back/vendor/chart.js/Chart.min.js') }}"></script>
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            var statisticsData = {{ statisticsData|json_encode|raw }};
-            var dates = [];
-            var counts = [];
-            
-            statisticsData.forEach(function(item) {
-                dates.push(item.date);
-                counts.push(item.count);
-            });
+    <!-- Modal pour choisir le format de téléchargement -->
+    <div class="modal fade" id="downloadOptionsModal" tabindex="-1" role="dialog" aria-labelledby="downloadOptionsModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="downloadOptionsModalLabel">Télécharger en format :</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body text-center">
+                    <a href="#" class="btn btn-success" id="download-csv-option">CSV</a>
+                    <a href="#" class="btn btn-danger" id="download-pdf-option">PDF</a>
+                </div>
+            </div>
+        </div>
+    </div>
 
-            var ctx = document.getElementById('reclamation-chart').getContext('2d');
-            var myChart = new Chart(ctx, {
-                type: 'bar',
-                data: {
-                    labels: dates.map(function(date) {
-                        return new Date(date).toLocaleDateString();
-                    }),
-                    datasets: [{
-                        label: 'Nombre de réclamations',
-                        data: counts,
-                        backgroundColor: 'rgba(54, 162, 235, 0.2)',
-                        borderColor: 'rgba(54, 162, 235, 1)',
-                        borderWidth: 1
+  <script src="{{ asset('back/vendor/chart.js/Chart.min.js') }}"></script>
+<script src="{{ asset('back/js/jspdf.umd.min.js') }}"></script>
+
+
+
+
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        var statisticsData = {{ statisticsData|json_encode|raw }};
+        var dates = [];
+        var counts = [];
+        
+        statisticsData.forEach(function(item) {
+            dates.push(item.date);
+            counts.push(item.count);
+        });
+
+        var ctx = document.getElementById('reclamation-chart').getContext('2d');
+        var myChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: dates.map(function(date) {
+                    return new Date(date).toLocaleDateString();
+                }),
+                datasets: [{
+                    label: 'Nombre de réclamations',
+                    data: counts,
+                    backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero: true,
+                            fontSize: 12 // Taille de police pour l'axe Y
+                        },
+                        scaleLabel: {
+                            display: true,
+                            labelString: 'Nombre de réclamations',
+                            fontSize: 14 // Taille de police pour le libellé de l'axe Y
+                        }
+                    }],
+                    xAxes: [{
+                        ticks: {
+                            fontSize: 12 // Taille de police pour l'axe X
+                        },
+                        scaleLabel: {
+                            display: true,
+                            labelString: 'Dates',
+                            fontSize: 14 // Taille de police pour le libellé de l'axe X
+                        }
                     }]
                 },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    scales: {
-                        yAxes: [{
-                            ticks: {
-                                beginAtZero: true,
-                                fontSize: 12 // Taille de police pour l'axe Y
-                            },
-                            scaleLabel: {
-                                display: true,
-                                labelString: 'Nombre de réclamations',
-                                fontSize: 14 // Taille de police pour le libellé de l'axe Y
-                            }
-                        }],
-                        xAxes: [{
-                            ticks: {
-                                fontSize: 12 // Taille de police pour l'axe X
-                            },
-                            scaleLabel: {
-                                display: true,
-                                labelString: 'Dates',
-                                fontSize: 14 // Taille de police pour le libellé de l'axe X
-                            }
-                        }]
-                    },
-                    legend: {
-                        display: true,
-                        position: 'top',
-                        labels: {
-                            fontColor: '#333', // Couleur de police pour la légende
-                            fontSize: 14 // Taille de police pour la légende
-                        }
-                    },
-                    title: {
-                        display: false // Désactiver le titre du graphique
-                    }
+                legend: {
+                    display: false
+                },
+                title: {
+                    display: false
                 }
-            });
-
-            // Fonction pour télécharger les données au format CSV
-            document.getElementById('download-csv').addEventListener('click', function() {
-                var csvContent = "data:text/csv;charset=utf-8,";
-                csvContent += "Date;Nombre de réclamations\n";
-                for (var i = 0; i < dates.length; i++) {
-                    var date = new Date(dates[i]).toLocaleDateString();
-                    var count = counts[i].toLocaleString(); // Ajoutez cette ligne pour formater le nombre avec des séparateurs de milliers
-                    csvContent += "\"" + date + "\";" + count + "\n"; // Utilisez des guillemets pour gérer les dates avec des espaces ou des caractères spéciaux
-                }
-                var encodedUri = encodeURI(csvContent);
-                var link = document.createElement("a");
-                link.setAttribute("href", encodedUri);
-                link.setAttribute("download", "statistiques_reclamations.csv");
-                document.body.appendChild(link); // Required for FF
-                link.click(); // This will download the data file named "statistiques_reclamations.csv".
-            });
+            }
         });
-    </script>
+
+        // Afficher la modal pour choisir le format de téléchargement
+        document.getElementById('download-csv').addEventListener('click', function() {
+            $('#downloadOptionsModal').modal('show');
+        });
+
+        // Télécharger en format CSV
+        document.getElementById('download-csv-option').addEventListener('click', function() {
+            var csvContent = "data:text/csv;charset=utf-8,";
+            csvContent += "Date;Nombre de réclamations\n";
+            for (var i = 0; i < dates.length; i++) {
+                var date = new Date(dates[i]).toLocaleDateString();
+                var count = counts[i].toLocaleString(); // Ajoutez cette ligne pour formater le nombre avec des séparateurs de milliers
+                csvContent += "\"" + date + "\";" + count + "\n"; // Utilisez des guillemets pour gérer les dates avec des espaces ou des caractères spéciaux
+            }
+            var encodedUri = encodeURI(csvContent);
+            var link = document.createElement("a");
+            link.setAttribute("href", encodedUri);
+            link.setAttribute("download", "statistiques_reclamations.csv");
+            document.body.appendChild(link); // Required for FF
+            link.click(); // This will download the data file named "statistiques_reclamations.csv".
+            $('#downloadOptionsModal').modal('hide'); // Cacher la modal après le téléchargement
+        });
+
+        // Télécharger en format PDF
+        document.getElementById('download-pdf-option').addEventListener('click', function() {
+            
+            // Créer un nouvel objet jsPDF
+            var doc = new jsPDF();
+
+            // Convertir le graphique en image (base64)
+            var canvas = document.getElementById('reclamation-chart');
+            var imgData = canvas.toDataURL('image/png');
+
+            // Ajouter l'image convertie au PDF
+            doc.addImage(imgData, 'PNG', 10, 10, 180, 100);
+
+            // Télécharger le PDF
+            doc.save('statistiques_reclamations.pdf');
+
+            $('#downloadOptionsModal').modal('hide'); // Cacher la modal après le téléchargement
+        });
+    });
+</script>
 {% endblock %}

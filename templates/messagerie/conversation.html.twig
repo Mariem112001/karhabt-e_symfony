@@ -5,17 +5,17 @@
 {% endblock %}
 
 {% block body %}
-    <div class="container">
-        <div class="row">
-            <div class="col-md-8 mx-auto">
+     <div class="container" style="max-width: 7000px;">
+        <div class="row"style="max-width: 7000px;">
+            <div class="col-md-8 mx-auto"style="max-width: 7000px;">
                 <a href="{{ path('app_messagerie_index') }}" class="btn btn-primary mb-3">Retour</a>
 
-                <div class="messages-container">
+                <div class="messages-container" style="max-height: 400px; max-width: 1000px;overflow-y: auto;">
                     {% for messagerie in messageries %}
                         {% if not messagerie.deleted %}
                             <div class="message card mb-3">
                                 <div class="card-body">
-                                    <div class="dropdown" style="position: absolute; top: 0; left: 0;">
+                                    <div class="dropdown" style="position: absolute; top: 5px; right: 5px;"> <!-- Adjusted position to top-right corner -->
                                         <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                             <i class="fas fa-ellipsis-v"></i> <!-- Font Awesome icon for vertical ellipsis -->
                                         </button>
@@ -25,6 +25,14 @@
                                         </div>
                                     </div>
                                     <div style="margin-left: 40px;"> <!-- Margin to separate content from the dropdown -->
+                                        {% if receiver.imageUser %}
+                                            <div class="card-text">
+                                                <small class="text-muted">
+                                                    <img src="{{ asset(receiver.imageUser) }}" alt="User Image" style="width: 50px; height: 50px; margin-right: 10px;">
+                                                    <span style="color: blue; font-weight: bold;">Receiver : {{ receiver.prenom ~ ' ' ~ receiver.nom }}</span>
+                                                </small>
+                                            </div>
+                                        {% endif %}
                                         <p class="card-text">{{ messagerie.contenu }}</p>
                                         <p class="card-text"><small class="text-muted">Envoyé le : {{ messagerie.dateEnvoie|date('Y-m-d H:i:s') }}</small></p>
                                     </div>
@@ -45,3 +53,4 @@
         </div>
     </div>
 {% endblock %}
+

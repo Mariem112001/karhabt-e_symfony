@@ -126,44 +126,37 @@ class MessagerieController extends AbstractController
     }
     
     #[Route('/conversation/{senderId}/{receiverId}', name: 'conversation_view')]
-public function viewConversation(Request $request, MessagerieRepository $messagerieRepository, $senderId, $receiverId,EntityManagerInterface $entityManager): Response
-{
-    // Récupérer les messages entre l'expéditeur et le destinataire
-    $messageries = $messagerieRepository->findBySenderAndReceiver($senderId, $receiverId);
-
-   
-        $users = $entityManager->getRepository(User::class)->find($senderId); // Recherche de l'utilisateur correspondant à l'ID 24
-        $userr = $entityManager->getRepository(User::class)->find($receiverId);
-    $messagerie = new Messagerie();
-    $messagerie -> setSender($users);
-    $messagerie -> setReceiver($userr);
-    $messagerie ->setDateenvoie(new \DateTime());
-        
-    //$idu = $request->query->get('idu'); // Récupérer la valeur de 'idu' dans l'URL
-//$user = $entityManager->getRepository(User::class)->find($idu); // Recherche de l'utilisateur par son identifiant
-
-//$email = ''; // Initialiser la variable email
-//if ($user) {
-// $email = $user->getEmail(); // Récupérer l'email de l'utilisateur si trouvé
-//}
-
-
-  ; // Recherche de l'utilisateur par son identifiant
+    public function viewConversation(Request $request, MessagerieRepository $messagerieRepository, $senderId, $receiverId, EntityManagerInterface $entityManager): Response
+    {
+        // Récupérer les messages entre l'expéditeur et le destinataire
+        $messageries = $messagerieRepository->findBySenderAndReceiver($senderId, $receiverId);
     
-
-
-$form = $this->createForm(Messagerie1Type::class, $messagerie);
-$form->handleRequest($request);
-
-if ($form->isSubmitted() && $form->isValid()) {
-$entityManager->persist($messagerie);
-$entityManager->flush();
-
-}
-
-    return $this->render('messagerie/conversation.html.twig', [
-        'messageries' => $messageries,
-        'form' => $form->createView(), // Passer le formulaire à la vue
-    ]);
-}
+        // Récupérer les informations sur l'utilisateur receiver
+        $receiver = $entityManager->getRepository(User::class)->find($receiverId);
+    
+        // Passer l'URL de l'image de l'utilisateur à la vue
+        $imageUserUrl = $receiver ? $receiver->getImageUser() : null;
+    
+        $messagerie = new Messagerie();
+        $messagerie->setSender($entityManager->getReference(User::class, $senderId));
+        $messagerie->setReceiver($receiver);
+        $messagerie->setDateenvoie(new \DateTime());
+    
+        // Créer le formulaire
+        $form = $this->createForm(Messagerie1Type::class, $messagerie);
+        $form->handleRequest($request);
+    
+        if ($form->isSubmitted() && $form->isValid()) {
+            $entityManager->persist($messagerie);
+            $entityManager->flush();
+        }
+    
+        return $this->render('messagerie/conversation.html.twig', [
+            'messageries' => $messageries,
+            'receiver' => $receiver,
+            'imageUserUrl' => $imageUserUrl, // Passer l'URL de l'image à la vue
+            'form' => $form->createView(),
+        ]);
+    }
+    
 }

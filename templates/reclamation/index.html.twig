@@ -15,29 +15,31 @@
                 <form method="get" action="{{ path('app_reclamation_index') }}" class="form-inline justify-content-center">
                     <div class="form-group mr-2">
                         <label for="dateReclamation" class="mr-2">Sélectionner une date de réclamation:</label>
-                        <input type="text" id="dateReclamation" name="dateReclamation" class="form-control datepicker">
+<input type="text" id="dateReclamation" name="dateReclamation" class="form-control datepicker" onchange="this.form.submit()">
+
+
                     </div>
-                    <button type="submit" class="btn btn-primary">Rechercher</button>
+                
                 </form>
             </div>
             <div class="col-md-6">
-                <form method="get" action="{{ path('app_reclamation_index') }}" class="form-inline justify-content-center">
-                    <div class="form-group mr-2">
-                        <label for="orderBy" class="mr-2">Trier par:</label>
-                        <select name="orderBy" id="orderBy" class="form-control">
-                            <option value="date">Date de réclamation</option>
-                            <option value="sujet">Sujet (ordre alphabétique)</option>
-                        </select>
-                    </div>
-                    <div class="form-group mr-2">
-                        <label for="orderDirection" class="mr-2">Direction:</label>
-                        <select name="orderDirection" id="orderDirection" class="form-control">
-                            <option value="asc">Ascendant</option>
-                            <option value="desc">Descendant</option>
-                        </select>
-                    </div>
-                    <button type="submit" class="btn btn-primary">Trier</button>
-                </form>
+                <form id="reclamationForm" method="get" action="{{ path('app_reclamation_index') }}" class="form-inline justify-content-center">
+    <div class="form-group mr-2">
+        <label for="orderBy" class="mr-2">Trier par:</label>
+        <select name="orderBy" id="orderBy" class="form-control">
+            <option value="date">Date de réclamation</option>
+            <option value="sujet">Sujet (ordre alphabétique)</option>
+        </select>
+    </div>
+    <div class="form-group mr-2">
+        <label for="orderDirection" class="mr-2">Direction:</label>
+        <select name="orderDirection" id="orderDirection" class="form-control">
+            <option value="asc">Ascendant</option>
+            <option value="desc">Descendant</option>
+        </select>
+    </div>
+</form>
+
             </div>
         </div>
 
@@ -105,5 +107,13 @@
                 // Autres options du DatePicker
             });
         });
+  document.addEventListener("DOMContentLoaded", function() {
+        var form = document.getElementById('reclamationForm');
+        form.querySelectorAll('select').forEach(function(select) {
+            select.addEventListener('change', function() {
+                form.submit();
+            });
+        });
+    });
     </script>
 {% endblock %}

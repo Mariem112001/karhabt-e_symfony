@@ -104,7 +104,7 @@ public function all(Request $request, EntityManagerInterface $entityManager, Pag
     $pagination = $paginator->paginate(
         $query,
         $request->query->getInt('page', 1),
-        8
+        7
     );
 
     // Passer une variable indiquant si des réclamations ont été trouvées
