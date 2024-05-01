@@ -2,22 +2,17 @@
 
 namespace App\Controller;
 
-use App\Entity\Abonnement;
 use App\Entity\Actualite;
 use App\Entity\Commentaire;
 use App\Entity\Reponse;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use App\Entity\Salle;
-use App\Form\AbonnementTypeFront;
 use App\Form\CommentaireFormType;
 use App\Form\CommentaireType;
 use App\Form\RatingFormType;
 use App\Form\ReponseFormType;
-use App\Repository\AbonnementRepository;
 use App\Repository\ActualiteRepository;
-use App\Repository\SalleRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Endroid\QrCode\Builder\BuilderInterface;
 use Endroid\QrCode\Writer\Result\PngResult;
@@ -119,6 +114,7 @@ public function show(Request $request, Actualite $actualite): Response
         // Redirect back to the same page after posting the commentaire
         return $this->redirectToRoute('app_actualite_show_front', ['id' => $actualite->getId()]);
     }
+    
 
     // Fetch all commentaires related to the actualite
     $commentaires = $actualite->getCommentaires();
