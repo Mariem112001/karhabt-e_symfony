@@ -1,0 +1,15 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Add Response{% endblock %}
+
+{% block body %}
+<div class="container mt-4">
+    <h2>Add Response</h2>
+    <p>Responding to: {{ commentaire.contenue }}</p>
+    
+    {{ form_start(reponseForm, {'attr': {'novalidate': 'novalidate'}}) }}
+    {{ form_widget(reponseForm) }}
+    <button type="submit" class="btn btn-primary">Submit</button>
+    {{ form_end(reponseForm) }}
+</div>
+{% endblock %}

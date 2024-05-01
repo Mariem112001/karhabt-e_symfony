@@ -1,0 +1,56 @@
+{% extends 'baseback.html.twig' %}
+
+{% block title %}Actualite index{% endblock %}
+
+{% block body %}
+    <h1>Actualite index</h1>
+    <div id="table-actions" class="d-flex align-items-center justify-content-between mb-4">
+        <div class="d-flex">
+            <button id="btPrint" onclick="createPDF()" class="export-pdf-btn">
+                <i class="fas fa-file-pdf"></i> Export PDF
+            </button>
+            <input type="text" id="myInput" onkeyup="myFunction()" placeholder="Search ..." class="form-control"
+                id="search-input">
+        </div>
+    </div>
+    <table class="table" id="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th onclick="sortTable(1)">Titre ⏬</th>
+                <th>Image</th>
+                <th onclick="sortTable(3)">Rating ⏬</th>
+                <th>Contenue</th>
+                <th onclick="sortTable(5)">Date ⏬</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for actualite in actualites %}
+            <tr>
+                <td>{{ actualite.id }}</td>
+                <td>{{ actualite.titre }}</td>
+                <td>  <img src="{{ asset('uploads/' ~ actualite.image) }}" alt="{{ actualite.titre }}" class="card-img-top"></td>
+                <td>{{ actualite.rating }}</td>
+                <td>{{ actualite.contenue }}</td>
+                <td>{{ actualite.date ? actualite.date|date('Y-m-d') : '' }}</td>
+                <td>
+                    <a href="{{ path('app_actualite_show', {'id': actualite.id}) }}" class="btn btn-info">show</a>
+                    <a href="{{ path('app_actualite_edit', {'id': actualite.id}) }}" class="btn btn-warning">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="7">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    <nav aria-label="Page navigation">
+        <ul class="pagination justify-content-center">
+            {{ knp_pagination_render(actualites) }}
+        </ul>
+    </nav>
+
+    <a href="{{ path('app_actualite_new') }}" class="btn btn-success" >Create new</a>
+{% endblock %}
