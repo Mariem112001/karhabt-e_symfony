@@ -10,17 +10,22 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
+use Knp\Component\Pager\PaginatorInterface;
 
 #[Route('/voiture')]
 class VoitureController extends AbstractController
 {
     #[Route('/', name: 'app_voiture_index', methods: ['GET'])]
-    public function index(EntityManagerInterface $entityManager): Response
+    public function index(EntityManagerInterface $entityManager, PaginatorInterface $paginator, Request $request): Response
     {
-        $voitures = $entityManager
-            ->getRepository(Voiture::class)
-            ->findAll();
-
+        $query = $entityManager->getRepository(Voiture::class)->createQueryBuilder('v')->getQuery();
+    
+        $voitures = $paginator->paginate(
+            $query,
+            $request->query->getInt('page', 1), // numéro de la page, par défaut 1
+            4 // nombre d'éléments par page
+        );
+    
         return $this->render('voiture/index.html.twig', [
             'voitures' => $voitures,
         ]);

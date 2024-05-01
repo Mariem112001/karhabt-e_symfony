@@ -1,0 +1,31 @@
+{% extends "basefront.html.twig" %}
+
+{% block title %}Statistics{% endblock %}
+
+{% block body %}
+    <div class="container-xxl py-5">
+        <div class="container">
+            <div class="text-center wow fadeInUp" data-wow-delay="0.1s">
+                <h6 class="text-primary text-uppercase">// Statistics //</h6>
+                <h1 class="mb-5">Arrival Statistics</h1>
+            </div>
+            <div class="row g-4">
+                <div class="col-lg-12">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <h5 class="card-title">Total Arrivals: {{ totalArrivals }}</h5>
+                            <p class="card-text">Average Quantity per Arrival: {{ averageQuantityPerArrival }}</p>
+                            <p class="card-text">Top 5 Car Models by Quantity:</p>
+                            <ul>
+                                {% for carModel, quantity in top5CarModels %}
+                                    <li>{{ carModel }} ({{ quantity }})</li>
+                                {% endfor %}
+                            </ul>
+                            <!--... display other statistics... -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

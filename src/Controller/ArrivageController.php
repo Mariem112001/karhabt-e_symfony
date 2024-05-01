@@ -10,6 +10,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use App\Repository\ArrivageRepository;
 
 #[Route('/arrivage')]
 class ArrivageController extends AbstractController
@@ -21,6 +22,15 @@ class ArrivageController extends AbstractController
             ->getRepository(Arrivage::class)
             ->findAll();
 
+        return $this->render('arrivage/index.html.twig', [
+            'arrivages' => $arrivages,
+        ]);
+    }
+    #[Route('/Trie', name: 'app_arrivage_index_Trie', methods: ['GET'])]
+    public function indexTrieDate(EntityManagerInterface $entityManager, ArrivageRepository $arrivageRepository): Response
+    {
+        $arrivages = $arrivageRepository->findByDateentree();
+    
         return $this->render('arrivage/index.html.twig', [
             'arrivages' => $arrivages,
         ]);

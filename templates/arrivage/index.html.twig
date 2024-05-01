@@ -4,6 +4,7 @@
 
 {% block body %}
 <title> {% block title %}	SB Admin 2 - Dashboard {% endblock %}</title>
+
     
 
   {% block css %}
@@ -350,6 +351,7 @@
     <!-- Page Heading -->
     <div class="d-sm-flex align-items-center justify-content-between mb-4">
         <h1 class="h3 mb-0 text-gray-800">Users</h1>
+        <a class="collapse-item" href="{{ path('app_arrivage_index_Trie')}}">trier</a>
         <a href="{{ path('app_arrivage_new') }}" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
             <i class="fas fa-plus-circle fa-sm text-white-50"></i> Create New
         </a>

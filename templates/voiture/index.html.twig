@@ -4,6 +4,7 @@
 
 {% block body %}
 <title> {% block title %}	SB Admin 2 - Dashboard {% endblock %}</title>
+
     
 
   {% block css %}
@@ -14,6 +15,31 @@
     <!-- Custom styles for this template -->
     <link href="{{ asset('back/css/sb-admin-2.min.css') }}" rel="stylesheet">
 {% endblock %}
+<style>
+.pagination {
+    background-color: #007bff; /* Couleur de fond */
+    color: #fff; /* Couleur du texte */
+    border-color: #007bff; /* Couleur de la bordure */
+    display: inline-block; /* Affichage en ligne */
+    padding: 6px 12px; /* Espacement intérieur */
+    margin: 0; /* Marge extérieure */
+    border-radius: 4px; /* Rayon de la bordure */
+}
+
+.pagination a {
+    color: #fff; /* Couleur du texte des liens */
+    text-decoration: none; /* Supprimer le soulignement des liens */
+}
+
+.pagination a:hover {
+    background-color: #0056b3; /* Couleur de fond au survol */
+}
+
+.pagination .active {
+    background-color: #0056b3; /* Couleur de fond de l'élément actif */
+    border-color: #0056b3; /* Couleur de la bordure de l'élément actif */
+}
+</style>
 <!-- Page Wrapper -->
     <div id="wrapper">
 
@@ -412,6 +438,9 @@
                         <span>Copyright &copy; Your Website 2021</span>
                     </div>
                 </div>
+                <center><div class="pagination">
+    {{ knp_pagination_render(voitures) }}
+</div></center>
                  <div id="google_translate_element"></div> <script type="text/javascript"> function googleTranslateElementInit() { new google.translate.TranslateElement({pageLanguage: 'en'},'google_translate_element'); } </script> <script type="text/javascript"src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
             </footer>
             <!-- End of Footer -->
