@@ -3,47 +3,57 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Statistiques des réclamations</title>
+    <title>Réclamation PDF</title>
     <style>
-        /* Styles CSS pour votre contenu PDF */
         body {
             font-family: Arial, sans-serif;
-            margin: 20px;
+            background-color: #f5f5f5;
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            width: 100%;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            margin-top: 20px;
+            border: 2px solid #333; /* Ajoute une bordure */
         }
         h1 {
+            font-size: 28px;
             color: #333;
+            margin-bottom: 20px;
             text-align: center;
         }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
+        p {
+            font-size: 16px;
+            line-height: 1.5;
+            margin-bottom: 10px;
         }
-        th, td {
-            border: 1px solid #333;
-            padding: 8px;
-            text-align: left;
+        strong {
+            font-weight: bold;
+        }
+        .signature {
+            margin-top: 40px;
+            text-align: right;
+        }
+        .signature img {
+            width: 150px;
         }
     </style>
 </head>
 <body>
-    <h1>Statistiques des réclamations</h1>
-    <p>Ceci est un exemple de contenu pour votre fichier PDF. Vous pouvez personnaliser ce contenu comme vous le souhaitez.</p>
-    <table>
-        <thead>
-            <tr>
-                <th>Date</th>
-                <th>Nombre de réclamations</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for item in statisticsData %}
-                <tr>
-                    <td>{{ item.date|date('Y-m-d') }}</td>
-                    <td>{{ item.count }}</td>
-                </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+<div class="container">
+    <h1>Statistiques des Réclamations</h1>
+    {% for data in statisticsData %}
+        <p><strong>Date:</strong> {{ data.date }}</p>
+        <p><strong>Nombre de réclamations:</strong> {{ data.count }}</p>
+        <!-- Ajoutez d'autres détails statistiques ici si nécessaire -->
+    {% endfor %}
+</div>
 </body>
 </html>

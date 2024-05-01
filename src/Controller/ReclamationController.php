@@ -20,7 +20,8 @@ use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use App\Repository\ReclamationRepository;
 use App\Repository\ReponseReclamationRepository;
-
+use Dompdf\Dompdf;
+use Dompdf\Options;
 
 
 
@@ -30,57 +31,70 @@ class ReclamationController extends AbstractController
   
 
     #[Route('/', name: 'app_reclamation_index', methods: ['GET', 'POST'])]
- // Dans votre contrôleur ReclamationController
-
-
- public function index(Request $request, EntityManagerInterface $entityManager, PaginatorInterface $paginator): Response
- {
-     // Initialiser la requête pour récupérer les réclamations
-     $queryBuilder = $entityManager->getRepository(Reclamation::class)->createQueryBuilder('r');
- 
-     // Filtrer les réclamations par date de réclamation si une date est sélectionnée dans le formulaire
-     if ($dateReclamation = $request->query->get('dateReclamation')) {
-         $date = new DateTime($dateReclamation);
-         $queryBuilder
-             ->andWhere('r.dateReclamation = :date')
-             ->setParameter('date', $date);
-     }
- 
-     // Filtrer les réclamations par ID utilisateur (24)
-     $queryBuilder
-         ->andWhere('r.user = :userId')
-         ->setParameter('userId', 28);
- 
-     // Tri par date ou par sujet (ordre alphabétique)
-     $orderBy = $request->query->get('orderBy', 'date');
-     $orderDirection = $request->query->get('orderDirection', 'desc');
- 
-     if ($orderBy === 'date') {
-         $queryBuilder->orderBy('r.dateReclamation', $orderDirection);
-     } elseif ($orderBy === 'sujet') {
-         $queryBuilder->orderBy('r.sujet', $orderDirection);
-     }
- 
-     // Créer la requête
-     $query = $queryBuilder->getQuery();
- 
-     // Paginer les résultats
-     $pagination = $paginator->paginate(
-         $query,
-         $request->query->getInt('page', 1),
-         5
-     );
- 
-     // Passer une variable indiquant si des réclamations ont été trouvées
-     $noReclamationsFound = ($pagination->getTotalItemCount() === 0);
- 
-     // Rendre la vue avec les résultats paginés et le formulaire de recherche
-     return $this->render('reclamation/index.html.twig', [
-         'pagination' => $pagination,
-         'noReclamationsFound' => $noReclamationsFound,
-     ]);
- }
- 
+    public function index(Request $request, EntityManagerInterface $entityManager, PaginatorInterface $paginator): Response
+    {
+        // Création du QueryBuilder
+        $queryBuilder = $entityManager->getRepository(Reclamation::class)->createQueryBuilder('r');
+    
+        // Filtrer par date si spécifié
+        if ($dateReclamation = $request->query->get('dateReclamation')) {
+            $date = new \DateTime($dateReclamation);
+            $queryBuilder
+                ->andWhere('r.dateReclamation = :date')
+                ->setParameter('date', $date);
+        }
+    
+        // Filtrer les réclamations par ID utilisateur
+        $queryBuilder
+            ->andWhere('r.user = :userId')
+            ->setParameter('userId', 28); // Assurez-vous que l'ID est correctement géré
+    
+        // Tri
+        $orderBy = $request->query->get('orderBy', 'date');
+        $orderDirection = $request->query->get('orderDirection', 'desc');
+        if ($orderBy === 'date') {
+            $queryBuilder->orderBy('r.dateReclamation', $orderDirection);
+        } elseif ($orderBy === 'sujet') {
+            $queryBuilder->orderBy('r.sujet', $orderDirection);
+        }
+    
+        // Pagination
+        $query = $queryBuilder->getQuery();
+        $pagination = $paginator->paginate(
+            $query,
+            $request->query->getInt('page', 1),
+            4
+        );
+    
+        // Détecter si la requête est une requête AJAX
+        if ($request->isXmlHttpRequest()) {
+            $reclamationsData = [];
+            foreach ($pagination as $reclamation) {
+                $reclamationsData[] = [
+                    'sujet' => $reclamation->getSujet(),
+                    'description' => $reclamation->getDescription(),
+                    'dateReclamation' => $reclamation->getDateReclamation()->format('Y-m-d'),
+                    'emailUser' => $reclamation->getEmailUser(),
+                    'idr' => $reclamation->getIdr(),
+                ];
+            }
+    
+            return $this->json([
+                'reclamations' => $reclamationsData,
+                'pagination' => [
+                    'page' => $pagination->getCurrentPageNumber(),
+                    'pagesCount' => $pagination->getTotalItemCount()
+                ]
+            ]);
+        }
+    
+        // Afficher la page normale si pas AJAX
+        return $this->render('reclamation/index.html.twig', [
+            'pagination' => $pagination,
+            'noReclamationsFound' => ($pagination->getTotalItemCount() === 0),
+        ]);
+    }
+    
     
     
 #[Route('/all', name: 'app_reclamation_index_all', methods: ['GET', 'POST'])]
@@ -104,7 +118,7 @@ public function all(Request $request, EntityManagerInterface $entityManager, Pag
     $pagination = $paginator->paginate(
         $query,
         $request->query->getInt('page', 1),
-        7
+        5
     );
 
     // Passer une variable indiquant si des réclamations ont été trouvées
@@ -266,6 +280,45 @@ $reclamation->setUser($user);
         return $this->render('reponse_reclamation/statistics.html.twig', [
             'statisticsData' => $statisticsData,
         ]);
+    }
+
+    #[Route('/reclamation/pdf', name: 'app_reclamation_pdf')]
+    public function generatePdf(ReclamationRepository $reclamationRepository): Response
+    {
+        // Récupérer les données de statistiques depuis le repository
+        $statisticsData = $reclamationRepository->getReclamationsByDate();
+        // Récupérez le contenu HTML de votre vue Twig en passant les données de statistiques
+        $html = $this->renderView('reponse_reclamation/pdf_template.html.twig', [
+            'statisticsData' => $statisticsData // Passer les données de statistiques ici
+        ]);
+    
+        // Options pour Dompdf
+        $pdfOptions = new Options();
+        $pdfOptions->set('defaultFont', 'Arial');
+    
+        // Créez une instance de Dompdf avec les options
+        $dompdf = new Dompdf($pdfOptions);
+        
+        // Chargez le contenu HTML dans Dompdf
+        $dompdf->loadHtml($html);
+    
+        // Réglez la taille du papier (A4)
+        $dompdf->setPaper('A4', 'portrait');
+    
+        // Rendre le HTML en PDF
+        $dompdf->render();
+    
+        // Renvoyez le PDF généré à l'utilisateur
+        $output = $dompdf->output();
+    
+        // Créez une réponse avec le contenu PDF
+        $response = new Response($output);
+        $response->headers->set('Content-Type', 'application/pdf');
+    
+        // Définissez l'en-tête pour forcer le téléchargement du fichier PDF
+        $response->headers->set('Content-Disposition', 'attachment; filename="statistiques_reclamations.pdf"');
+    
+        return $response;
     }
     
 

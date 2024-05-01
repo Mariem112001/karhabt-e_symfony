@@ -157,4 +157,41 @@ public function show(ReponseReclamation $reponseReclamation): Response
 
         return $htmlContent;
     }
+
+
+    // Symfony controller action for PDF generation
+    #[Route('/download-pdf', name: 'download_pdf')]
+    public function downloadPdf(): Response
+    {
+        // Récupérez vos données de statistiques ici
+        $statisticsData = []; // Remplacez ceci par vos données réelles
+
+        // Générez le contenu HTML pour le PDF
+        $htmlContent = $this->renderView('reponse_reclamation/pdf_template.html.twig', [
+            'statisticsData' => $statisticsData,
+        ]);
+
+        // Créez une instance de Dompdf
+        $dompdf = new Dompdf();
+        $dompdf->loadHtml($htmlContent);
+
+        // Réglez la taille et l'orientation du papier
+        $dompdf->setPaper('A4', 'portrait');
+
+        // Rendez le PDF
+        $dompdf->render();
+
+        // Renvoyez le PDF en tant que réponse
+        return new Response(
+            $dompdf->output(),
+            Response::HTTP_OK,
+            [
+                'Content-Type' => 'application/pdf',
+                'Content-Disposition' => 'attachment; filename="statistiques_reclamations.pdf"',
+            ]
+        );
+    }
+
+ 
+
 }
