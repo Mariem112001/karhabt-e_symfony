@@ -31,15 +31,57 @@
 }
 
 </style>
+{% for message in app.flashes('warning') %}
+    <div class="notification-bubble">
+        <div class="notification-content">
+            {{ message }}
+        </div>
+    </div>
+{% endfor %}
+
+<style>
+    .notification-bubble {
+        position: relative;
+        display: inline-block;
+        background-color: #fff3cd; /* Yellow background */
+        border-radius: 20px; /* Rounded corners */
+        padding: 10px 20px; /* Padding inside the bubble */
+        margin: 10px; /* Adjust as needed */
+    }
+
+    .notification-content {
+        color: #856404; /* Text color */
+    }
+</style>
+
+
   <form
                         class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
                     <div class="input-group">
-                        <input type="text" class="form-control bg-light border-0 small" placeholder="Search for..."
-                               aria-label="Search" aria-describedby="basic-addon2">
+                    
                         <div class="input-group-append">
                             <button class="btn btn-primary" type="button">
                                 <i class="fas fa-search fa-sm"></i>
                             </button>
+      
+<div style="display: flex; align-items: center;">
+    <!-- Search bar -->
+    <input type="text" placeholder="Search..." style="padding: 8px; border-radius: 5px; border: 1px solid #ccc; margin-right: 10px;">
+
+    <!-- Dropdown menu -->
+    <div class="dropdown" style="position: relative;">
+        <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="background-color: #91DAF0; border: none; font-size: 16px;">
+            Trier les bons d'achats <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton" style="background-color: #FEFCF3; border: none; min-width: 200px;">
+            <li><a class="dropdown-item" href="{{ path('dossiers_date')}}" style="color: #F9A936;">Tri par date</a></li>
+             <li><a class="dropdown-item" href="{{ path('dossiers_cin')}}" style="color: #F9A936;">Tri par cin</a></li>
+            <!-- Add more dropdown items if needed -->
+        </ul>
+    </div>
+</div>
+
+
                         </div>
                     </div>
                 </form>
@@ -59,7 +101,7 @@
         <!-- DataTales Example -->
         <div class="card shadow mb-4">
             <div class="card-header py-3">
-                <h6 class="m-0 font-weight-bold text-primary">DataTables Example</h6>
+                <h6 class="m-0 font-weight-bold text-primary">liste des bon d'achats </h6>
             </div>
 
                
@@ -86,30 +128,34 @@
                                 <td>{{ dossier.region }}</td>
                                 <td>{{ dossier.date|date('d/m/Y') }}</td>
                                 <td>{{ dossier.montant }}</td>
-                                <td class="text-success">Verifier
+                                <td class="text-success">
 
-                                <a class="btn btn-danger" style="border-radius: 10px" href="{{ path('app_dossier_back_delete', {id: dossier.id}) }}">
+                                <a class="btn btn-sm-square bg-white text-primary me-1" style="border-radius: 10px" href="{{ path('app_dossier_back_delete', {id: dossier.id}) }}">
      Supprimer
     </a>
+                                <a class="fa fa-check" " style="border-radius: 10px" href="{{ path('app_send_email') }}">
+     
+    </a>
+     
                                          </td>
+                                        
                             </tr>
                             
                         {% endfor %}
+                         
+                          
                         </tbody>
                     </table>
-                </div>
+                    <center><div class="pagination">
+    {{ knp_pagination_render(dossiers) }}
+</div></center>
+          </div>
             </div>
         </div>
 
     </div>
     <!-- /.container-fluid -->
-   <li class="dropdown" style="list-style: none; margin-bottom: 100px; display:flex; justify-content: center  ">
-        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" style="color: #91DAF0; font-size: 25px; ">Trier les bon d'achats <span class="caret"></span></a>
-            <ul class="dropdown-menu" style="background-color: #FEFCF3; border: none;">
-                <li><a href="{{ path('dossiers_date')}}" style="color: #F9A936; text-decoration: none; font-size: 20px;">Tri par date</a></li> 
-  <li><a href="{{ path('dossiers_cin')}}" style="color: #F26A77; text-decoration: none; font-size: 20px;">Tri par cin</a></li> 
-
-    </li>
+  
 
     </div>
  
