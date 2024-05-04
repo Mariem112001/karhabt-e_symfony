@@ -11,10 +11,36 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Entity\User;
+use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 #[Route('/messagerie')]
 class MessagerieController extends AbstractController
+
+
 {
+
+    private $client;
+
+    public function __construct(HttpClientInterface $client)
+    {
+        $this->client = $client;
+    }
+
+    private function checkForBadWords(string $text): bool
+    {
+        $url = 'https://api.api-ninjas.com/v1/profanityfilter';
+        $apiKey = 'FVFAvAF9dOXLIvNjA2LY6Jdg8TCKcQhE3WrzT3YX';  // Remplacez 'YOUR_API_KEY_HERE' par votre clé API réelle
+
+        $response = $this->client->request('GET', $url, [
+            'query' => ['text' => $text],
+            'headers' => ['X-Api-Key' => $apiKey]
+        ]);
+
+        $content = $response->getContent();
+        $result = json_decode($content, true);
+
+        return $result['has_profanity'] ?? false;
+    }
     #[Route('/', name: 'app_messagerie_index', methods: ['GET'])]
     public function index(MessagerieRepository $messagerieRepository): Response
     {
@@ -24,55 +50,41 @@ class MessagerieController extends AbstractController
             'messageries' => $messageries,
         ]);
     }
+    
 
     #[Route('/new', name: 'app_messagerie_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
-        $idus = 62; // Vous avez mentionné que vous souhaitez utiliser l'ID utilisateur 24 statiquement
-        $idur = 28;
+        $idus = 62; // Utilisateur émetteur statique
+        $idur = 28; // Utilisateur récepteur statique
 
-        $users = $entityManager->getRepository(User::class)->find($idus); // Recherche de l'utilisateur correspondant à l'ID 24
+        $users = $entityManager->getRepository(User::class)->find($idus);
         $userr = $entityManager->getRepository(User::class)->find($idur);
-        
-        if (!$users) {
-            throw new \Exception("L'utilisateur avec l'ID $idus n'a pas été trouvé."); // Gérer le cas où l'utilisateur n'est pas trouvé
+
+        if (!$users || !$userr) {
+            throw new \Exception("L'un des utilisateurs spécifiés n'a pas été trouvé.");
         }
-        if (!$userr) {
-            throw new \Exception("L'utilisateur avec l'ID $idur n'a pas été trouvé."); // Gérer le cas où l'utilisateur n'est pas trouvé
-        }
-        
+
         $messagerie = new Messagerie();
-        $messagerie -> setSender($users);
-        $messagerie -> setReceiver($userr);
-                // Créer une nouvelle instance de Reclamation
-               
-                
-                // Attribuer la date actuelle à la propriété dateReclamation
-                $messagerie ->setDateenvoie(new \DateTime());
-                $messagerie ->setVu(true);
-                $messagerie ->setDeleted(false);
-        
-                //$idu = $request->query->get('idu'); // Récupérer la valeur de 'idu' dans l'URL
-        //$user = $entityManager->getRepository(User::class)->find($idu); // Recherche de l'utilisateur par son identifiant
-        
-        //$email = ''; // Initialiser la variable email
-        //if ($user) {
-           // $email = $user->getEmail(); // Récupérer l'email de l'utilisateur si trouvé
-        //}
-        
-            
-              ; // Recherche de l'utilisateur par son identifiant
-                
-            
-      
+        $messagerie->setSender($users);
+        $messagerie->setReceiver($userr);
+        $messagerie->setDateEnvoie(new \DateTime());
+        $messagerie->setVu(false);
+        $messagerie->setDeleted(false);
+
         $form = $this->createForm(Messagerie1Type::class, $messagerie);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            if ($this->checkForBadWords($messagerie->getContenu())) {
+                $this->addFlash('error', 'Votre message contient des mots inappropriés.');
+                return $this->redirectToRoute('app_messagerie_new');
+            }
+
             $entityManager->persist($messagerie);
             $entityManager->flush();
 
-            return $this->redirectToRoute('app_messagerie_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_messagerie_index');
         }
 
         return $this->renderForm('messagerie/new.html.twig', [
@@ -80,6 +92,7 @@ class MessagerieController extends AbstractController
             'form' => $form,
         ]);
     }
+
 
     #[Route('/{idmessage}', name: 'app_messagerie_show', methods: ['GET'])]
     public function show(Messagerie $messagerie): Response

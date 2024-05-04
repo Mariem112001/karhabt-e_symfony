@@ -14,7 +14,7 @@ use App\Entity\Reclamation;
 // Assurez-vous d'importer les classes Dompdf et Options depuis l'espace de noms Dompdf
 use Dompdf\Dompdf;
 use Dompdf\Options;
-
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 #[Route('/reponse/reclamation')]
 class ReponseReclamationController extends AbstractController
@@ -192,6 +192,15 @@ public function show(ReponseReclamation $reponseReclamation): Response
         );
     }
 
- 
+    #[Route('/react', name: 'react_to_response', methods: ['POST'])]
+    public function react(Request $request): JsonResponse
+    {
+        $data = json_decode($request->getContent(), true);
+        $type = $data['type'];
+        $responseId = $data['responseId'];
+
+        // Ici, vous pourriez logiquement enregistrer la réaction dans une base de données ou une session
+        return $this->json(['status' => 'success', 'message' => 'Réaction enregistrée']);
+    }
 
 }

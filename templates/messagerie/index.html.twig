@@ -1,39 +1,97 @@
 {% extends 'baseBack.html.twig' %}
 
-{% block title %} 
+{% block title %}
    Les conversations
 {% endblock %}
 
+{% block stylesheets %}
+<style>
+    .conversation-wrapper {
+        padding: 20px;
+        background-color: #f0f2f5; /* Fond clair pour le conteneur des conversations */
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.15);
+    }
+    .conversation-item {
+        background-color: #fff; /* Bulles blanches pour chaque conversation */
+        border-radius: 18px; /* Bulles arrondies */
+        margin-bottom: 10px;
+        padding: 15px 20px;
+        transition: background-color 0.3s ease; /* Transition douce pour le hover */
+        position: relative;
+        box-shadow: 0 1px 6px rgba(0,0,0,0.1);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+    .conversation-item:hover {
+        background-color: #e8f0fe; /* Changement de couleur au survol */
+    }
+    .message-date {
+        font-size: 0.85rem; /* Petite taille pour la date */
+        color: #666;
+        margin-top: 4px;
+    }
+    .message-content {
+        font-size: 1rem; /* Taille adaptée pour le contenu du message */
+        font-weight: 500;
+        color: #333;
+    }
+    .deleted-message {
+        color: #bbb;
+        text-decoration: line-through; /* Style pour les messages supprimés */
+    }
+    .btn-view-conversation {
+        border: none;
+        background-color: #007bff;
+        color: white;
+        padding: 8px 16px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 0.875rem;
+        border-radius: 20px;
+        transition: background-color 0.2s;
+    }
+    .btn-view-conversation:hover {
+        background-color: #0056b3;
+    }
+</style>
+{% endblock %}
+
 {% block body %}
-    <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-md-8">
-                <h1 class="page-title text-center mb-4">Service Client</h1>
-                
-                <div class="conversation-wrapper">
-                    <ul class="list-group conversation-list">
-                        {% for messagerie in messageries %}
-                            <li class="list-group-item conversation-item {% if messagerie.deleted %}deleted{% endif %}">
-                                <div class="d-flex align-items-center">
-                                    <img src="{{ asset('images/iconEnvMessg.png') }}" alt="image" class="img-fluid mr-3" style="width: 100px; height: 100px;">
-                                    <div class="conversation-preview flex-grow-1">
-                                        <p class="message-content">{{ messagerie.contenu }}</p>
-                                        <p class="message-date text-muted">{{ messagerie.dateenvoie ? messagerie.dateenvoie|date('Y-m-d') : '' }}</p>
-                                        {% if messagerie.deleted %}
-                                            <p class="deleted-message">Message supprimé</p>
-                                        {% endif %}
-                                    </div>
-                                    <a href="{{ path('conversation_view', { 'senderId': messagerie.sender.idu, 'receiverId': messagerie.receiver.idu }) }}" class="view-conversation-link btn btn-primary ml-2">Voir la conversation</a>
-                                </div>
-                            </li>
-                        {% endfor %}
-                    </ul>
-                </div>
-                
-                <div class="text-center mt-4">
-                    <a href="{{ path('app_messagerie_new') }}" class="create-new-message-link btn btn-success">Créer un nouveau message</a>
-                </div>
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-8"style="position: center;  width: 900px;">
+            <h1 class="page-title text-center mb-4">Service Client</h1>
+            
+            <div class="conversation-wrapper"style="position: center;  width: 900px;">
+                <ul class="list-group">
+                    {% for messagerie in messageries %}
+                    <li class="list-group-item conversation-item {% if messagerie.deleted %}deleted{% endif %}">
+                        <div class="d-flex align-items-center justify-content-between">
+                            <div>
+                                <p class="message-content">{{ messagerie.contenu }}</p>
+                                <p class="message-date text-muted">{{ messagerie.dateenvoie ? messagerie.dateenvoie|date('Y-m-d H:i') : 'Date inconnue' }}</p>
+                                {% if messagerie.deleted %}
+                                    <p class="deleted-message">Message supprimé</p>
+                                {% endif %}
+                            </div>
+                            <a href="{{ path('conversation_view', { 'senderId': messagerie.sender.idu, 'receiverId': messagerie.receiver.idu }) }}" class="btn-view-conversation">Voir la conversation</a>
+                        </div>
+                    </li>
+                    {% else %}
+                    <li class="list-group-item">
+                        Aucune conversation trouvée.
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+            
+            <div class="text-center mt-4">
+                <a href="{{ path('app_messagerie_new') }}" class="btn btn-success">Créer un nouveau message</a>
             </div>
         </div>
     </div>
+</div>
 {% endblock %}

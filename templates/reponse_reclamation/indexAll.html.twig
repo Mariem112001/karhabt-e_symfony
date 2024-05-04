@@ -60,7 +60,8 @@
         <form method="get" action="{{ path('app_reclamation_index_all') }}" class="form-inline justify-content-center mb-4">
             <div class="form-group mr-3">
                 <label for="dateReclamation" class="mr-2">Sélectionner une date de réclamation:</label>
-                <input type="text" id="dateReclamation" name="dateReclamation" class="form-control datepicker" onchange="this.form.submit()">
+               <input type="text" id="dateReclamation" name="dateReclamation" class="form-control datepicker" onchange="this.form.submit()" autocomplete="off">
+
             </div>
         </form>
         <nav aria-label="Page navigation">
