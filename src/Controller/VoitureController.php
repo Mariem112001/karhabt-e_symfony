@@ -14,9 +14,12 @@ use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use App\Repository\VoitureRepository;
 
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+
 #[Route('/voiture')]
 class VoitureController extends AbstractController
-{
+{   
+     
     #[Route('/', name: 'app_voiture_index', methods: ['GET'])]
     public function index(EntityManagerInterface $entityManager, PaginatorInterface $paginator, Request $request): Response
     {
@@ -32,7 +35,7 @@ class VoitureController extends AbstractController
             'voitures' => $voitures,
         ]);
     }
-
+    #[IsGranted('Admin')]
     #[Route('/new', name: 'app_voiture_new', methods: ['GET', 'POST'])]
     public function new(SecurityController $security,Request $request, EntityManagerInterface $entityManager): Response
     {
@@ -88,7 +91,7 @@ class VoitureController extends AbstractController
         'voitures' => $voitures,
     ]);
     }
-
+   
     #[Route('/{idv}/edit', name: 'app_voiture_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Voiture $voiture, EntityManagerInterface $entityManager): Response
      
@@ -128,7 +131,7 @@ class VoitureController extends AbstractController
     ]);
     
 }
-
+ 
     #[Route('/{idv}', name: 'app_voiture_delete', methods: ['POST'])]
     public function delete(Request $request, Voiture $voiture, EntityManagerInterface $entityManager): Response
     {

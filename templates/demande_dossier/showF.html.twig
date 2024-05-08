@@ -1,0 +1,73 @@
+{% extends 'baseFront.html.twig' %}
+
+{% block title %}Dossier des pappier{% endblock %}
+
+{% block body %}
+    <div class="container-fluid">
+
+        <!-- Page Heading -->
+        <h1 class="h3 mb-5 text-white">Demande Dossier: {{ demande_dossier.id }}</h1>
+
+        <!-- DataTales Example -->
+        <div class="card shadow mb-4">
+        
+                
+            <div class="card-header py-3">
+           
+                <h6 class="m-0 font-weight-bold text-primary">Les pappiers scannées</h6>
+           </div>
+        
+              
+            
+            <div class="card-body">
+   <a class="text-success font-weight-bold" >Verifier</a>
+                <table class="table">
+                    <tbody>
+                   
+                    <tr>
+                        <th>Carte d'identité</th>
+                        <td><a href="{{ demande_dossier.urlcin }}" target="_blank"> PDF </a></td>
+                    </tr>
+                    <tr>
+                        <th>Certificat de revenu</th>
+                        <td>
+                            <a href="{{ demande_dossier.urlcerretenu }}" target="_blank"> PDF </a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Attestation de travail </th>
+                        <td>
+                            <a href="{{ demande_dossier.urlatttravail }}" target="_blank"> PDF </a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Déclaration de revenu</th>
+                        <td>
+                            <a href="{{ demande_dossier.urldecrevenu }}" target="_blank"> PDF </a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Extrait de naissance</th>
+                        <td>
+                            <a href="{{ demande_dossier.urlextnaissance }}" target="_blank"> PDF </a>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+                
+                    <a href="{{ path('app_demande_dossier_delete', {id: demande_dossier.id}) }}"
+                       class="btn btn-danger mx-4" style="border-radius: 10px">Supprimer</a>
+                       
+                           <a href="{{ path('app_demande_dossier_edit', {id: demande_dossier.id}) }}"
+                       class="btn btn-primary" style="border-radius: 10px" >Modifier</a>
+                   
+                </div>
+ <a href="{{ path('app_demande_dossier_index') }}"
+                     class="btn btn-primary" >Retour</a>
+            </div>
+           
+             <div>
+                    
+        </div>
+    </div>
+{% endblock %}

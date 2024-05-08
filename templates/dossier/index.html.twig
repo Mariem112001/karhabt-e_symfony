@@ -1,0 +1,39 @@
+{% extends 'baseFront.html.twig' %}
+
+{% block title %}Dossier index{% endblock %}
+
+{% block body %}
+    <a href="{{ path('app_dossier_new') }}" class="btn btn-primary" id="openFormBtn" style="border-radius: 10px">Nouveau bon d'achat</a>
+    <h1 class="text-white text-center mb-4">Liste des bon d'achat</h1>
+    <div class="d-inline-flex flex-wrap align-items-center justify-content-center" style="gap: 80px; width: 100%">
+        {% for dossier in dossiers %}
+            <div class="card" style="width: 18rem;">
+                <div class="card-body">
+                    <div class="d-inline-flex mb-3 justify-content-between" style="width: 100%">
+                        <h5 class="card-title">Bon d'achat</h5>
+                        <p class="text-success">Verified</p>
+                    </div>
+                    <p class="card-text">CIN: {{ dossier.cin }}</p>
+                    <p class="card-text">Nom Prenom: {{ dossier.nom }} {{ dossier.prenom }}</p>
+                    <p class="card-text">Region: {{ dossier.region }} </p>
+                    <p class="card-text">Date: {{ dossier.date |date('d-m-Y') }}</p>
+                    <p class="card-text">Montant: {{ dossier.montant }}</p>
+                       <a href="{{ path('app_qr_codes', {id: dossier.id}) }}" class="card-link"></i> QR</a>
+                    <img src="{{ path('app_qr_codes', { id: dossier.id }) }}" alt="QR Code" class="qr-code-img">
+                    <a href="{{ path('app_dossier_show', {id: dossier.id}) }}" class="card-link"><i class="fa fa-eye"></i></a>
+                    <a href="{{ path('app_dossier_edit', {id: dossier.id}) }}" class="card-link"><i class="fa fa-edit"></i></a>
+                    <a href="{{ path('app_dossier_delete', {id: dossier.id}) }}" class="card-link"><i class="fa fa-trash"></i></a>
+                    <a href="{{ path('pdf_dossier', {id: dossier.id}) }}" class="card-link"><i class="fa fa-file-pdf-o">PDF</i></a>
+                 
+                    <a href="{{ path('stripe') }}" class="card-link"><i class="fa fa-credit-card"></i></a>
+      
+
+
+
+                </div>
+            </div>
+         
+        {% endfor %}
+    </div>
+  
+{% endblock %}

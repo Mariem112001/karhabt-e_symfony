@@ -10,8 +10,11 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+
 class StatsController extends AbstractController
 {
+   
     #[Route('/admin/stats', name: 'app_stats')]
     public function index(ActualiteRepository $actualiteRepository, CommentaireRepository $commentaireRepository, ReponseRepository $reponseRepository): Response
     {

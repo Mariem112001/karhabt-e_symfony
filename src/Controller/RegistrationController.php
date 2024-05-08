@@ -89,8 +89,8 @@ public function deleteUser(int $idu, EntityManagerInterface $entityManager): Res
 
 private function sendWelcomeSms($phoneNumber)
     {
-        $sid = '';
-        $token = '';
+        $sid = ''; // Replace with your Twilio account SID
+        $token = ''; // Replace with your Twilio auth token
         $twilio = new Client($sid, $token);
         $message = 'Bienvenu dans Karhabte\nTon compte a été crée avec succés.';
 
