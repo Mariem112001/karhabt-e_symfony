@@ -1,0 +1,56 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <br>
+   
+    <div class="container">
+        <h1 class="mt-3 mb-4">Blog</h1>
+       
+        <div class="row">
+            {% for actualite in actualites %}
+                <div class="col-md-4">
+                    <div class="card mb-4">
+                        <div class="card-img-container">
+                            <img src="{{ asset('uploads/' ~ actualite.image) }}" alt="{{ actualite.titre }}" class="card-img-top">
+                        </div>
+                        <div class="card-body">
+                            <h5 class="card-title text-center">{{ actualite.titre }}</h5>
+                            <div class="d-flex justify-content-center align-item-center">
+                                <img src="{{ actualite.qrCode }}" alt="QR Code" width="123" height="100">
+                            </div>
+                            <div class="collapse" id="collapse{{ actualite.id }}">
+                                <p>{{ actualite.contenue }}</p>
+                            </div>
+                              <a href="{{ path('app_actualite_show_front', {'id': actualite.id}) }}"> 
+                              <button class="btn btn-primary btn-sm">
+                            Read More
+                            </button></a>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+            <div class="card mb-4">
+                    <div class="card-body">
+                        <h5 class="card-title">Actualites Summary</h5>
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Actualite</th>
+                                    <th scope="col">Comments</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for actualite in actualites %}
+                                    <tr>
+                                        <td>{{ actualite.titre }}</td>
+                                        <td>{{ actualite.commentaires|length }}</td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+        </div>
+       
+    </div>
+{% endblock %}

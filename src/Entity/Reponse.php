@@ -2,79 +2,77 @@
 
 namespace App\Entity;
 
+use App\Repository\ReponseRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
+use App\Entity\User;
 
-
-#[ORM\Entity]
+#[ORM\Entity(repositoryClass: ReponseRepository::class)]
 class Reponse
 {
     #[ORM\Id]
-    #[ORM\GeneratedValue(strategy: "IDENTITY")]
-    #[ORM\Column(name: "idR", type: "integer", nullable: false)]
-    private $idr;
+    #[ORM\GeneratedValue]
+    #[ORM\Column(type: 'integer')]
+    private $id;
 
-    #[ORM\Column(name: "Date_Rep", type: "date", nullable: false)]
-    private $dateRep;
+    #[ORM\Column(type: 'string', length: 255)]
+    #[Assert\NotBlank]
+    private $contenue;
 
-    #[ORM\Column(name: "ContenueR", type: "string", length: 255, nullable: false)]
-    private $contenuer;
+    #[ORM\ManyToOne(targetEntity: Commentaire::class, inversedBy: 'reponses')]
+    private $commentaire;
 
-    #[ORM\Column(name: "idComnt", type: "integer", nullable: true, options: ["default" => "NULL"])]
-    private $idcomnt = NULL;
 
-    #[ORM\Column(name: "idU", type: "integer", nullable: false)]
-    private $idu;
+    #[ORM\ManyToOne(targetEntity: User::class)]
+    #[ORM\JoinColumn(name: "idU", referencedColumnName: "idU")]
+    private ?User $user = null;
 
-    public function getIdr(): ?int
+    public function getId(): ?int
     {
-        return $this->idr;
+        return $this->id;
     }
 
-    public function getDateRep(): ?\DateTimeInterface
+    public function getContenue(): ?string
     {
-        return $this->dateRep;
+        return $this->contenue;
     }
 
-    public function setDateRep(\DateTimeInterface $dateRep): static
+    public function setContenue(string $contenue): self
     {
-        $this->dateRep = $dateRep;
+        $this->contenue = $contenue;
 
         return $this;
     }
 
-    public function getContenuer(): ?string
+    public function getCommentaire(): ?Commentaire
     {
-        return $this->contenuer;
+        return $this->commentaire;
     }
 
-    public function setContenuer(string $contenuer): static
+    public function setCommentaire(?Commentaire $commentaire): self
     {
-        $this->contenuer = $contenuer;
+        $this->commentaire = $commentaire;
 
         return $this;
     }
 
-    public function getIdcomnt(): ?int
+
+
+
+    public function getUser(): ?User
     {
-        return $this->idcomnt;
+        return $this->user;
     }
 
-    public function setIdcomnt(?int $idcomnt): static
+    public function setUser(?User $user): static
     {
-        $this->idcomnt = $idcomnt;
+        $this->user = $user;
 
         return $this;
     }
 
-    public function getIdu(): ?int
-    {
-        return $this->idu;
-    }
 
-    public function setIdu(int $idu): static
-    {
-        $this->idu = $idu;
 
-        return $this;
-    }
+
+
 }

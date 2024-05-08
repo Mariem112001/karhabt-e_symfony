@@ -2,36 +2,64 @@
 
 namespace App\Entity;
 
+use App\Repository\ActualiteRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Context\ExecutionContextInterface;
 use Symfony\Component\Validator\Constraints as Assert;
+use App\Entity\User;
 
-#[ORM\Table(name: "actualite")]
-#[ORM\Entity]
+#[Assert\Callback(callback: 'validateStartDate')]
+#[ORM\Entity(repositoryClass: ActualiteRepository::class)]
 class Actualite
 {
     #[ORM\Id]
-    #[ORM\GeneratedValue(strategy: "IDENTITY")]
-    #[ORM\Column(name: "idAct", type: "integer", nullable: false)]
-    private ?int $idact = null;
+    #[ORM\GeneratedValue]
+    #[ORM\Column(type: 'integer')]
+    private $id;
 
-    #[ORM\Column(name: "titre", type: "string", length: 255, nullable: false)]
-    private ?string $titre = null;
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    #[Assert\NotBlank]
+    private $titre;
 
-    #[ORM\Column(name: "image", type: "string", length: 255, nullable: false)]
-    private ?string $image = null;
+    #[ORM\Column(type: 'string', length: 255)]
 
-    #[ORM\Column(name: "rating", type: "float", precision: 10, scale: 0, nullable: false)]
-    private ?float $rating = null;
+    private $image;
 
-    #[ORM\Column(name: "contenue", type: "string", length: 255, nullable: false)]
-    private ?string $contenue = null;
+    #[ORM\Column(type: 'integer', nullable: true)]
+    private $rating;
 
-    #[ORM\Column(name: "date_pub", type: "date", nullable: false)]
-    private ?\DateTimeInterface $datePub = null;
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    #[Assert\NotBlank]
+    private $contenue;
 
-    public function getIdact(): ?int
+    #[ORM\Column(type: 'date', nullable: true)]
+    #[Assert\NotBlank]
+    private $date;
+
+    #[ORM\OneToMany(mappedBy: 'actualite', targetEntity: Commentaire::class)]
+    private $commentaires;
+
+
+     
+     /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $qrCode;
+
+    #[ORM\ManyToOne(targetEntity: User::class)]
+    #[ORM\JoinColumn(name: "idU", referencedColumnName: "idU")]
+    private ?User $user = null;
+
+    public function __construct()
     {
-        return $this->idact;
+        $this->commentaires = new ArrayCollection();
+    }
+
+    public function getId(): ?int
+    {
+        return $this->id;
     }
 
     public function getTitre(): ?string
@@ -39,7 +67,7 @@ class Actualite
         return $this->titre;
     }
 
-    public function setTitre(string $titre): static
+    public function setTitre(?string $titre): self
     {
         $this->titre = $titre;
 
@@ -51,19 +79,19 @@ class Actualite
         return $this->image;
     }
 
-    public function setImage(string $image): static
+    public function setImage(string $image): self
     {
         $this->image = $image;
 
         return $this;
     }
 
-    public function getRating(): ?float
+    public function getRating(): ?int
     {
         return $this->rating;
     }
 
-    public function setRating(float $rating): static
+    public function setRating(?int $rating): self
     {
         $this->rating = $rating;
 
@@ -75,22 +103,99 @@ class Actualite
         return $this->contenue;
     }
 
-    public function setContenue(string $contenue): static
+    public function setContenue(?string $contenue): self
     {
         $this->contenue = $contenue;
 
         return $this;
     }
 
-    public function getDatePub(): ?\DateTimeInterface
+    public function getDate(): ?\DateTimeInterface
     {
-        return $this->datePub;
+        return $this->date;
     }
 
-    public function setDatePub(\DateTimeInterface $datePub): static
+    public function setDate(?\DateTimeInterface $date): self
     {
-        $this->datePub = $datePub;
+        $this->date = $date;
 
         return $this;
     }
+
+    /**
+     * @return Collection<int, Commentaire>
+     */
+    public function getCommentaires(): Collection
+    {
+        return $this->commentaires;
+    }
+
+    public function addCommentaire(Commentaire $commentaire): self
+    {
+        if (!$this->commentaires->contains($commentaire)) {
+            $this->commentaires[] = $commentaire;
+            $commentaire->setActualite($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCommentaire(Commentaire $commentaire): self
+    {
+        if ($this->commentaires->removeElement($commentaire)) {
+            // set the owning side to null (unless already changed)
+            if ($commentaire->getActualite() === $this) {
+                $commentaire->setActualite(null);
+            }
+        }
+
+        return $this;
+    }
+    public function validateStartDate(ExecutionContextInterface $context, $payload)
+    {
+        $yesterday = new \DateTime('yesterday');
+        
+        if ($this->date <= $yesterday) {
+            $context->buildViolation('The start date must be after yesterday.')
+                ->atPath('date_deb_abonnement')
+                ->addViolation();
+        }
+    }
+
+    public function __toString(): string
+    {
+        return $this->titre ?? 'Unnamed Post';
+    }
+
+    public function getQrCode(): ?string
+    {
+        return $this->qrCode;
+    }
+
+    public function setQrCode(?string $qrCode): self
+    {
+        $this->qrCode = $qrCode;
+
+        return $this;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): static
+    {
+        $this->user = $user;
+
+        return $this;
+    }
+
+
+
+
+
+
+
+
 }

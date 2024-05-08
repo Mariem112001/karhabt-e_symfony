@@ -2,8 +2,11 @@
 
 namespace App\Entity;
 
-use Doctrine\ORM\Mapping as ORM;
 
+use Doctrine\ORM\Mapping as ORM;
+use App\Entity\Voiture;
+use Symfony\Component\Validator\Constraints as Assert;
+ 
 #[ORM\Entity]
 class Arrivage
 {
@@ -13,14 +16,28 @@ class Arrivage
     private ?int $ida = null;
 
     #[ORM\Column(name: "quantite", type: "integer", nullable: true)]
+    #[Assert\NotBlank(message: "la quantite ne peut pas etre vide.")]
+
+    #[Assert\Positive(message: "la quantite doit etre positif")]
     private ?int $quantite = null;
 
     #[ORM\Column(name: "dateEntree", type: "date", nullable: true)]
+    #[Assert\NotBlank(message: "La date peut pas être vide.")]
+    #[Assert\Type(\DateTimeInterface::class)]
+    #[Assert\GreaterThanOrEqual("today", message: "La date doit être aujourd'hui ou ultérieure.")]
+   
     private ?\DateTimeInterface $dateentree = null;
 
     #[ORM\ManyToOne(targetEntity: Voiture::class)]
-    #[ORM\JoinColumn(name: "idV", referencedColumnName: "idv")]
-    private ?Voiture $idv = null;
+    #[ORM\JoinColumn(name: "idv", referencedColumnName: "idV")]
+    #[Assert\NotBlank(message: "tu dois selectionner une voiture")]
+    private ?Voiture $voiture = null; 
+
+
+    
+     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: "arrivages")]
+    #[ORM\JoinColumn(name: "idu", referencedColumnName: "idU")]
+    private ?User $user = null;
 
     public function getIda(): ?int
     {
@@ -50,16 +67,39 @@ class Arrivage
 
         return $this;
     }
-
-    public function getIdv(): ?Voiture
+    public function getVoiture(): ?Voiture
     {
-        return $this->idv;
+        return $this->voiture;
     }
 
-    public function setIdv(?Voiture $idv): static
+    public function setVoiture(?Voiture $voiture): self
     {
-        $this->idv = $idv;
+        $this->voiture = $voiture;
+        return $this;
+    }
+
+
+
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): static
+    {
+        $this->user = $user;
 
         return $this;
     }
+
+
+
+
+
+
+
+
+
+
 }

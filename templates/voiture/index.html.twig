@@ -1,0 +1,157 @@
+{% extends "baseBack.html.twig"%}
+
+
+
+{% block body %}
+<title> {% block title %}	SB Admin 2 - Dashboard {% endblock %}</title>
+
+    
+ 
+<style>
+.pagination {
+    background-color: #007bff; /* Couleur de fond */
+    color: #fff; /* Couleur du texte */
+    border-color: #007bff; /* Couleur de la bordure */
+    display: inline-block; /* Affichage en ligne */
+    padding: 6px 12px; /* Espacement intérieur */
+    margin: 0; /* Marge extérieure */
+    border-radius: 4px; /* Rayon de la bordure */
+}
+
+.pagination a {
+    color: #fff; /* Couleur du texte des liens */
+    text-decoration: none; /* Supprimer le soulignement des liens */
+}
+
+.pagination a:hover {
+    background-color: #0056b3; /* Couleur de fond au survol */
+}
+
+.pagination .active {
+    background-color: #0056b3; /* Couleur de fond de l'élément actif */
+    border-color: #0056b3; /* Couleur de la bordure de l'élément actif */
+}
+</style>
+<!-- Page Wrapper -->
+ 
+    <!-- Page Heading -->
+    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+        <h1 class="h3 mb-0 text-gray-800">Users</h1>
+        <a href="{{ path('app_voiture_new') }}" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
+            <i class="fas fa-plus-circle fa-sm text-white-50"></i> Create New
+        </a>
+    </div>
+
+                  <!-- Content Row -->
+<div class="row">
+    {% for voiture in voitures %}
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-primary shadow h-100 py-2">
+                <div class="card-body">
+                  <div class="form-group">
+                <h5 class="font-weight-bold">Image:</h5>
+                <img src="{{ asset('uploads/' ~ voiture.img) }}" alt="{{ voiture.marque }}" style="max-width: 100%; height: auto;">
+            </div>
+                    <div class="form-group">
+                        <h5 class="font-weight-bold">Marque:</h5>
+                        <p>{{ voiture.marque }}</p>
+                    </div>
+                    <div class="form-group">
+                        <h5 class="font-weight-bold">Modèle:</h5>
+                        <p>{{ voiture.modele }}</p>
+                    </div>
+                    <div class="form-group">
+                        <h5 class="font-weight-bold">Couleur:</h5>
+                        <p>{{ voiture.couleur }}</p>
+                    </div>
+                    <div class="form-group">
+                        <h5 class="font-weight-bold">Prix:</h5>
+                        <p>{{ voiture.prix }}</p>
+                    </div>
+                   
+           
+                    <div class="form-group">
+                        <h5 class="font-weight-bold">Description:</h5>
+                        <p>{{ voiture.description }}</p>
+                    </div>
+                    <!-- Ajout des boutons Edit et Delete -->
+                    <div class="text-right">
+                        <form method="post" action="{{ path('app_voiture_edit', {'idv': voiture.idv}) }}">
+                            <!-- Your form fields for updating -->
+                            <button type="submit">Update</button>
+                            {{ include('voiture/_delete_form.html.twig') }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+</div>
+
+
+            <!-- End of Main Content -->
+
+            <!-- Footer -->
+            <footer class="sticky-footer bg-white">
+                <div class="container my-auto">
+                    <div class="copyright text-center my-auto">
+                        <span>Copyright &copy; Your Website 2021</span>
+                    </div>
+                </div>
+                <center><div class="pagination">
+    {{ knp_pagination_render(voitures) }}
+</div></center>
+                 <div id="google_translate_element"></div> <script type="text/javascript"> function googleTranslateElementInit() { new google.translate.TranslateElement({pageLanguage: 'en'},'google_translate_element'); } </script> <script type="text/javascript"src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+            </footer>
+            <!-- End of Footer -->
+
+        </div>
+        <!-- End of Content Wrapper -->
+
+    </div>
+    <!-- End of Page Wrapper -->
+
+    <!-- Scroll to Top Button-->
+    <a class="scroll-to-top rounded" href="#page-top">
+        <i class="fas fa-angle-up"></i>
+    </a>
+
+    <!-- Logout Modal-->
+    <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
+                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">Ã—</span>
+                    </button>
+                </div>
+                <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                    <a class="btn btn-primary" href="login.html">Logout</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% block js %}
+    <!-- Bootstrap core JavaScript -->
+    <script src="{{ asset('back/vendor/jquery/jquery.min.js') }}"></script>
+    <script src="{{ asset('back/vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
+
+    <!-- Core plugin JavaScript -->
+    <script src="{{ asset('back/vendor/jquery-easing/jquery.easing.min.js') }}"></script>
+
+    <!-- Custom scripts for all pages -->
+    <script src="{{ asset('back/js/sb-admin-2.min.js') }}"></script>
+
+    <!-- Page level plugins -->
+    <script src="{{ asset('back/vendor/chart.js/Chart.min.js') }}"></script>
+
+    <!-- Page level custom scripts -->
+    <script src="{{ asset('back/js/demo/chart-area-demo.js') }}"></script>
+    <script src="{{ asset('back/js/demo/chart-pie-demo.js') }}"></script>
+{% endblock %}
+
+{% endblock %}
