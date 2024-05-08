@@ -1,6 +1,9 @@
 #index:
 #    path: /
 #    controller: App\Controller\DefaultController::index
+app_reponse_add:
+    path: '/reponse/add/{commentaireId}'
+    controller: App\Controller\home_blogController::add
 app_voiture_delete:
     path: /voiture/{idv}
     controller: App\Controller\VoitureController::delete
@@ -8,9 +11,6 @@ app_voiture_delete:
 generate_pdf:
     path: /generate-pdf
     methods: [POST]
-app_reponse_add:
-    path: '/reponse/add/{commentaireId}'
-    controller: App\Controller\HomeController::add
 app_stats:
     path: /admin/stats
     controller: App\Controller\StatsController::index

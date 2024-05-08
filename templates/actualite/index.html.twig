@@ -30,7 +30,7 @@
             <tr>
                 <td>{{ actualite.id }}</td>
                 <td>{{ actualite.titre }}</td>
-                <td>  <img src="{{ asset('uploads/' ~ actualite.image) }}" alt="{{ actualite.titre }}" class="card-img-top"></td>
+                <td>  <img src="{{ asset('uploads/images/' ~ actualite.image) }}" alt="{{ actualite.titre }}" class="card-img-top"></td>
                 <td>{{ actualite.rating }}</td>
                 <td>{{ actualite.contenue }}</td>
                 <td>{{ actualite.date ? actualite.date|date('Y-m-d') : '' }}</td>

@@ -1,0 +1,41 @@
+{% extends 'baseBack.html.twig' %}
+
+{% block title %} 
+    Repondre
+{% endblock %}
+
+{% block body %}
+    <h1 class="mb-4">liste des reponses</h1>
+
+    <div class="table-responsive">
+        <table class="table table-bordered table-hover">
+            <thead class="thead-dark">
+                <tr>
+                    <th scope="col">Contenureponse</th>
+                    <th scope="col">Datereponser</th>
+                    <th scope="col">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for reponse_reclamation in reponse_reclamations %}
+                    <tr>
+                        <td>{{ reponse_reclamation.contenureponse }}</td>
+                        <td>{{ reponse_reclamation.dateReponseR|date('Y-m-d') }}</td>
+                        <td>
+                            <a href="{{ path('app_reponse_reclamation_show', {'idreponser': reponse_reclamation.idreponser}) }}" class="btn btn-info btn-sm mr-2">Show</a>
+                            <a href="{{ path('app_reponse_reclamation_edit', {'idreponser': reponse_reclamation.idreponser}) }}" class="btn btn-primary btn-sm">Edit</a>
+                        </td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="3" class="text-center">No records found</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+<div class="text-center">
+        <a href="{{ path('app_reclamation_index_all') }}" class="btn btn-primary">Les réclamations</a>
+    </div>
+   
+{% endblock %}

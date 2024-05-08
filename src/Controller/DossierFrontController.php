@@ -39,8 +39,40 @@ class DossierFrontController extends AbstractController
         ]);
         
     }
-
     #[Route('/new', name: 'app_dossier_new', methods: ['GET', 'POST'])]
+    public function new(SecurityController $security, Request $request, EntityManagerInterface $entityManager): Response
+    {
+        $dossier = new Dossier();
+        $dossier->setDate(new \DateTime());
+        $form = $this->createForm(DossierType::class, $dossier);
+        $form->handleRequest($request);
+    
+        if ($form->isSubmitted() && $form->isValid()) {
+            // Get the current user
+            $user = $security->getUser();
+            $dossier->setUser($user);
+    
+            // Persist and flush the dossier entity
+            $entityManager->persist($dossier);
+            $entityManager->flush();
+    
+            // Redirect to the dossier index page
+            return $this->redirectToRoute('app_dossier_index', [], Response::HTTP_SEE_OTHER);
+        }
+    
+        // Fetch demandes associated with the current user
+        $user = $security->getUser();
+        $demandeDossiers = $entityManager->getRepository(DemandeDossier::class)->findBy(['user' => $user]);
+    
+        return $this->renderForm('dossier/new.html.twig', [
+            'dossier' => $dossier,
+            'demandeDossiers' => $demandeDossiers, // Pass the demandes associated with the current user to the template
+            'form' => $form,
+        ]);
+    }
+    
+   
+   /* #[Route('/new', name: 'app_dossier_new', methods: ['GET', 'POST'])]
     public function new(SecurityController $security,Request $request, EntityManagerInterface $entityManager, QrcodeService $qrcodeService): Response
     {
         $dossier = new Dossier();
@@ -66,7 +98,7 @@ class DossierFrontController extends AbstractController
             'form' => $form->createView(), // Pass the FormView object
             'qrCodeData' => $qrCodeData, // Pass qrCodeData to the template
         ]);
-    }
+    }*/
     
 
 

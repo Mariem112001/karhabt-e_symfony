@@ -1,0 +1,47 @@
+{% block body %}
+ 
+{{ form_start(form, {'attr': {'novalidate': 'novalidate','class': 'my-form'}}) }}
+    {{ form_row(form.contenu, {'attr': {'class': 'form-control', 'id': 'description'}}) }}
+    {{ form_row(form.vu) }}
+    {{ form_row(form.deleted) }}
+
+    {# Render the dropdown list of users #}
+    {{ form_row(form.receiver, {'label': 'Receiver', 'attr': {'class': 'form-control'}}) }}
+
+    <button class="btn btn-primary" type="submit">Envoyer</button>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <button type="button" id="startRecording" class="btn btn-secondary">
+        <i class="fa fa-microphone"></i> 
+    </button>
+{{ form_end(form) }}
+
+<script>
+    // Add your JavaScript code for voice recognition here
+</script>
+ 
+
+
+    <script>
+    var recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition || window.mozSpeechRecognition || window.msSpeechRecognition)();
+    recognition.lang = 'fr-FR'; // Définir la langue de reconnaissance
+    recognition.interimResults = false;
+    recognition.maxAlternatives = 1;
+
+    document.getElementById('startRecording').onclick = function() {
+        recognition.start();
+    };
+
+    recognition.onresult = function(event) {
+        document.getElementById('messagerie1_contenu').value = event.results[0][0].transcript;
+
+    };
+
+    recognition.onspeechend = function() {
+        recognition.stop();
+    };
+
+    recognition.onerror = function(event) {
+        console.error('Erreur de reconnaissance vocale: ' + event.error);
+    };
+    </script>
+{% endblock %}

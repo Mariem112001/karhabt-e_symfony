@@ -1,0 +1,62 @@
+{% extends 'baseFront.html.twig' %}
+
+{% block title %} 
+    Réponses à la réclamation - {{ reclamation.sujet }}
+{% endblock %}
+
+{% block body %}
+<div class="container">
+    <h1 class="text-center mt-5 mb-4">Réponses à la réclamation - {{ reclamation.sujet }}</h1>
+    
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            {% if responses %}
+                <ul class="list-group">
+                    {% for response in responses %}
+                        <li class="list-group-item">
+                            <p class="mb-1">{{ response.contenuReponse }}</p>
+                            <small class="text-muted">Date de la réponse : {{ response.dateReponseR|date('Y-m-d') }}</small>
+                            <!-- Boutons de réaction -->
+                            <div>
+                                <button class="react-button" data-type="smile">😊</button>
+                                <button class="react-button" data-type="sad">😢</button>
+                                <button class="react-button" data-type="angry">😠</button>
+                            </div>
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p class="text-center mt-4">Aucune réponse n'a été trouvée pour cette réclamation.</p>
+            {% endif %}
+        </div>
+    </div>
+    
+    <div class="row justify-content-center mt-4">
+        <div class="col-md-8">
+            <div id="messageDisplay" class="alert alert-info" style="display: none;"></div>
+            <a href="{{ path('app_reclamation_index') }}" class="btn btn-primary">Retour</a>
+        </div>
+    </div>
+</div>
+<script>
+    document.querySelectorAll('.react-button').forEach(button => {
+        button.addEventListener('click', function() {
+            const messageType = button.getAttribute('data-type');
+            const messageDisplay = document.getElementById('messageDisplay');
+            let message = "";
+            if (messageType === "smile") {
+                message = "Merci pour votre réaction positive!";
+                messageDisplay.className = "alert alert-success";
+            } else if (messageType === "sad") {
+                message = "Désolé que vous soyez triste à propos de cela.";
+                messageDisplay.className = "alert alert-secondary";
+            } else if (messageType === "angry") {
+                message = "Nous comprenons votre frustration.";
+                messageDisplay.className = "alert alert-danger";
+            }
+            messageDisplay.textContent = message;
+            messageDisplay.style.display = 'block';
+        });
+    });
+</script>
+{% endblock %}

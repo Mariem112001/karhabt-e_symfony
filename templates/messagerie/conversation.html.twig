@@ -1,0 +1,55 @@
+{% extends 'baseBack.html.twig' %}
+
+{% block title %} 
+    Conversation
+{% endblock %}
+
+{% block body %}
+     <div class="container" style="max-width: 7000px;">
+        <div class="row"style="max-width: 7000px;">
+            <div class="col-md-8 mx-auto"style="max-width: 7000px;">
+                <a href="{{ path('app_messagerie_index') }}" class="btn btn-primary mb-3">Retour</a>
+
+                <div class="messages-container" style="max-height: 400px; max-width: 1000px;overflow-y: auto;">
+                    {% for messagerie in messageries %}
+                        {% if not messagerie.deleted %}
+                            <div class="message card mb-3">
+                                <div class="card-body">
+                                    <div class="dropdown" style="position: absolute; top: 5px; right: 5px;"> <!-- Adjusted position to top-right corner -->
+                                        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            <i class="fas fa-ellipsis-v"></i> <!-- Font Awesome icon for vertical ellipsis -->
+                                        </button>
+                                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                            <a class="dropdown-item" href="{{ path('app_messagerie_edit', {'idmessage': messagerie.idmessage}) }}">Modifier</a>
+                                            {{ include('messagerie/_delete_form.html.twig') }}
+                                        </div>
+                                    </div>
+                                    <div style="margin-left: 40px;"> <!-- Margin to separate content from the dropdown -->
+                                      {% if receiver %}
+    <div class="card-text">
+        <small class="text-muted">
+            <span style="color: blue; font-weight: bold;">{{ receiver.prenom ~ ' ' ~ receiver.nom }}</span>
+        </small>
+    </div>
+{% endif %}
+                                        <p class="card-text">{{ messagerie.contenu }}</p>
+                                        <p class="card-text"><small class="text-muted">Envoyé le : {{ messagerie.dateEnvoie|date('Y-m-d ') }}</small></p>
+                                    </div>
+                                </div>
+                            </div>
+                        {% else %}
+                            <div class="message-deleted alert alert-danger mb-3" role="alert">
+                                Message supprimé
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+
+                <div class="mt-3"> <!-- Margin top to separate the form from the messages container -->
+                    {{ include('messagerie/_form.html.twig') }}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+

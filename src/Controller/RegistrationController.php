@@ -98,7 +98,7 @@ private function sendWelcomeSms($phoneNumber)
             $twilio->messages->create(
                 $phoneNumber, // Phone number which receives the message
                 [
-                    'from' => '+', // Replace with your Twilio phone number
+                    'from' => '', // Replace with your Twilio phone number
                     'body' => $message
                 ]
             );

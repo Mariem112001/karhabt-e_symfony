@@ -40,7 +40,7 @@
                 type="text" class="form-control" id="dossier_prenom{{ dossier.id }}"
                 value="{{ dossier.prenom }}"
                 placeholder="{{ field_label(form.prenom) }}"
->
+
         <span class="text-danger">{{ form_errors(form.prenom) }}</span>
     </div>
     <div class="form-group">
@@ -74,13 +74,25 @@
                placeholder="{{ field_label(form.montant) }}">
         <span class="text-danger">{{ form_errors(form.montant) }}</span>
     </div>
- 
+
+    <div class="form-group">
+        <label for="dossier_demande{{ dossier.id }}" class="text-white">{{ form_label(form.montant) }}</label>
+        <select
+                name="{{ field_name(form.demandeDossier) }}"
+                class="form-control"
+                id="dossier_demande{{ dossier.id }}">
+            <option value="">Selectionner une demande</option>
+            {% for demande in demandeDossiers %}
+                <option {{ demande.id == field_value(form.demandeDossier) ? 'selected' : '' }}
+                        value="{{ demande.id }}">{{ demande.id }}</option>
+            {% endfor %}
+        </select>
+        <span class="text-danger">{{ form_errors(form.demandeDossier) }}</span>
+       
+    </div>
+   
     <button type="submit" class="btn btn-primary">Submit</button>
 </form>
 
 
 {{ form_end(form) }}
- {% if qrCodeData %}
-        <h2>QR Code</h2>
-        <img src="{{ qrCodeData }}" alt="QR Code">
-    {% endif %}
