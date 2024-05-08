@@ -7,7 +7,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
-use App\Entity\User;
+ 
 
 #[ORM\Entity(repositoryClass: CommentaireRepository::class)]
 class Commentaire
@@ -30,9 +30,10 @@ class Commentaire
     #[ORM\OneToMany(mappedBy: 'commentaire', targetEntity: Reponse::class)]
     private $reponses;
 
-    #[ORM\ManyToOne(targetEntity: User::class)]
-    #[ORM\JoinColumn(name: "idU", referencedColumnName: "idU")]
+    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: "commentaires")]
+    #[ORM\JoinColumn(name: "idu", referencedColumnName: "idU")]
     private ?User $user = null;
+    
 
     public function __construct()
     {

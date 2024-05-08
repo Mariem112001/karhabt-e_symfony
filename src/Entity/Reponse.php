@@ -5,7 +5,7 @@ namespace App\Entity;
 use App\Repository\ReponseRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
-use App\Entity\User;
+ 
 
 #[ORM\Entity(repositoryClass: ReponseRepository::class)]
 class Reponse
@@ -23,9 +23,10 @@ class Reponse
     private $commentaire;
 
 
-    #[ORM\ManyToOne(targetEntity: User::class)]
-    #[ORM\JoinColumn(name: "idU", referencedColumnName: "idU")]
+    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: "reponses")]
+    #[ORM\JoinColumn(name: "idu", referencedColumnName: "idU")]
     private ?User $user = null;
+    
 
     public function getId(): ?int
     {

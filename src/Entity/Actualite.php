@@ -8,7 +8,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
 use Symfony\Component\Validator\Constraints as Assert;
-use App\Entity\User;
+ 
 
 #[Assert\Callback(callback: 'validateStartDate')]
 #[ORM\Entity(repositoryClass: ActualiteRepository::class)]
@@ -48,9 +48,11 @@ class Actualite
      */
     private $qrCode;
 
-    #[ORM\ManyToOne(targetEntity: User::class)]
-    #[ORM\JoinColumn(name: "idU", referencedColumnName: "idU")]
+    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: "actualite")]
+    #[ORM\JoinColumn(name: "idu", referencedColumnName: "idU")]
     private ?User $user = null;
+    
+    
 
     public function __construct()
     {
