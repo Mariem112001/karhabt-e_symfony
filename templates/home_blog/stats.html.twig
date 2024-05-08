@@ -1,0 +1,39 @@
+{% extends 'baseback.html.twig' %}
+
+{% block title %}Statistics{% endblock %}
+
+{% block body %}
+<div class="container-fluid mt-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white">
+                    <h1 class="card-title mb-0">Statistics</h1>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="stat-item bg-info text-white rounded p-4 text-center">
+                                <h3 class="display-4 mb-0">{{ actualiteCount }}</h3>
+                                <p class="lead text-muted">Total Actualites</p>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="stat-item bg-success text-white rounded p-4 text-center">
+                                <h3 class="display-4 mb-0">{{ commentaireCount }}</h3>
+                                <p class="lead text-muted">Total Commentaires</p>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="stat-item bg-warning text-white rounded p-4 text-center">
+                                <h3 class="display-4 mb-0">{{ reponseCount }}</h3>
+                                <p class="lead text-muted">Total Reponses</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

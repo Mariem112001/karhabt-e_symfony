@@ -1,0 +1,16 @@
+{% extends 'baseFront.html.twig' %}
+
+{% block body %}
+    <div class="row g-4">
+        {% for arrivage in arrivages %}
+            <div class="col-md-4">
+                <div class="bg-light d-flex flex-column justify-content-center p-4">
+                    <h5 class="text-uppercase"> {{ arrivage.voiture.marque }} {{ arrivage.voiture.modele }} </h5>
+                    <p class="m-0"><strong>Quantité:</strong> {{ arrivage.quantite }}</p>
+                    <p class="m-0"><strong>Date d'entrée:</strong> {{ arrivage.dateentree|date('Y-m-d') }}</p>
+                    <img src="{{ asset('uploads/' ~ arrivage.voiture.img) }}" alt="Image de la voiture">
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% endblock %}

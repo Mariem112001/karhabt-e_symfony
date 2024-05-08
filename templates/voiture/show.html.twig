@@ -1,0 +1,54 @@
+{% extends 'baseFront.html.twig' %}
+
+{% block body %}
+    <h1>Voitures</h1>
+<!-- Template Stylesheet -->
+    <link href="{{ asset('front/css/style.css') }}" rel="stylesheet">
+    {# Barre de recherche #}
+    <form id="searchForm" action="{{ path('app_voiture_search') }}" method="GET">
+        <input type="text" id="searchInput" name="criteria" placeholder="Rechercher...">
+    </form>
+
+    <div class="row g-4" id="voituresContainer">
+        {% if voitures is empty %}
+            <p>Aucun résultat trouvé.</p>
+        {% else %}
+            {% for voiture in voitures %}
+                <div class="col-md-4" align="center">
+                    <div class="card">
+                        <img src="{{ asset('uploads/' ~ voiture.img) }}" class="card-img-top" alt="Image de la voiture">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ voiture.marque }} {{ voiture.modele }}</h5>
+                            <p class="card-text"><strong>Couleur:</strong> {{ voiture.couleur }}</p>
+                            <p class="card-text"><strong>Prix:</strong> {{ voiture.prix }}</p>
+                            <p class="card-text"><strong>Description:</strong> {{ voiture.description }}</p>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        {% endif %}
+    </div>
+
+    <script>
+        // Fonction pour effectuer une recherche lorsque l'utilisateur tape
+        document.getElementById('searchInput').addEventListener('input', function(event) {
+            // Récupérer la valeur du champ de recherche
+            var query = event.target.value.trim();
+
+            // Envoyer une requête AJAX pour récupérer les résultats filtrés
+            var xhr = new XMLHttpRequest();
+            xhr.open('GET', '{{ path('app_voiture_search') }}?criteria=' + encodeURIComponent(query), true);
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState === XMLHttpRequest.DONE) {
+                    if (xhr.status === 200) {
+                        // Mettre à jour la section des voitures avec les résultats filtrés
+                        document.getElementById('voituresContainer').innerHTML = xhr.responseText;
+                    } else {
+                        console.error('Erreur lors de la requête AJAX : ' + xhr.status);
+                    }
+                }
+            };
+            xhr.send();
+        });
+    </script> <!-- add this closing tag -->
+{% endblock %}

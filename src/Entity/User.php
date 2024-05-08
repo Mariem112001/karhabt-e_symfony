@@ -1,27 +1,31 @@
 <?php
 
 namespace App\Entity;
-use Doctrine\DBAL\Types\Types;
-use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Validator\Constraints as Assert;
 
-#[ORM\Table(name: "user")]
-#[ORM\Entity]
-class User
+use App\Repository\UserRepository;
+use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
+use Doctrine\DBAL\Types\Types;
+
+#[ORM\Entity(repositoryClass: UserRepository::class)]
+#[UniqueEntity(fields: ['email'], message: 'There is already an account with this email')]
+class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue(strategy: "IDENTITY")]
     #[ORM\Column(name: "idU", type: "integer", nullable: false)]
     private ?int $idu = null;
-
+    
     #[ORM\Column(name: "nom", type: "string", length: 255, nullable: true, options: ["default" => "NULL"])]
     private ?string $nom = null;
 
     #[ORM\Column(name: "prenom", type: "string", length: 255, nullable: true, options: ["default" => "NULL"])]
     private ?string $prenom = null;
 
-    #[ORM\Column(name: "DateNaissance", type: "date", nullable: true, options: ["default" => "NULL"])]
-    private ?\DateTimeInterface $dateNaissance = null;
+    #[ORM\Column(name: "DateNaissance", type: Types::DATE_MUTABLE, nullable: true, options: ["default" => null])]
+private ?\DateTimeInterface $dateNaissance = null;
 
     #[ORM\Column(name: "numTel", type: "integer", nullable: true, options: ["default" => "NULL"])]
     private ?int $numTel = null;
@@ -29,19 +33,41 @@ class User
     #[ORM\Column(name: "eMAIL", type: "string", length: 255, nullable: true, options: ["default" => "NULL"])]
     private ?string $email = null;
 
+    #[ORM\Column(name: "roles", type: "string", length: 0, nullable: true, options: ["default" => "NULL"])]
+    private ?string $roles = null;
+
+    #[ORM\Column(name: "role", type: "string", length: 255, nullable: true)]
+    private ?string $role = null;
+
+    #[ORM\Column(name: "imageUser", type: "string", length: 255, nullable: true)]
+    private ?string $imageUser = null;
+
+    /**
+     * @var string The hashed password
+     */
     #[ORM\Column(name: "passwd", type: "string", length: 255, nullable: true, options: ["default" => "NULL"])]
     private ?string $passwd = null;
 
-    #[ORM\Column(name: "role", type: "string", length: 0, nullable: true, options: ["default" => "NULL"])]
-    private ?string $role = null;
-
-    #[ORM\Column(name: "imageUser", type: "string", length: 255, nullable: false)]
-    private ?string $imageUser = null;
+    #[ORM\Column(nullable: true)]
+    private ?bool $status = null;
 
     public function getIdu(): ?int
     {
         return $this->idu;
     }
+
+    public function getEmail(): ?string
+    {
+        return $this->email;
+    }
+
+    public function setEmail(string $email): static
+    {
+        $this->email = $email;
+
+        return $this;
+    }
+
 
     public function getNom(): ?string
     {
@@ -91,41 +117,70 @@ class User
         return $this;
     }
 
-    public function getEmail(): ?string
+    public function getRole(): ?string
     {
-        return $this->email;
+        return $this->role;
     }
 
-    public function setEmail(?string $email): static
+    public function setRole(?string $role): self
     {
-        $this->email = $email;
+        $this->role = $role;
+        return $this;
+    }
+    
+    /**
+     * A visual identifier that represents this user.
+     *
+     * @see UserInterface
+     */
+    public function getUserIdentifier(): string
+    {
+        return (string) $this->email;
+    }
 
+    /**
+     * @deprecated since Symfony 5.3, use getUserIdentifier instead
+     */
+    public function getUsername(): string
+    {
+        return (string) $this->email;
+    }
+
+    /**
+     * @see UserInterface
+     */
+    public function getRoles(): array
+    {
+        // Always return an array of roles, even if it's just one.
+        return [$this->role ?? 'Client'];
+    }
+
+    /**
+     * Accepts an array of roles, only the first role is considered.
+     * The setter is still compatible with Symfony's security component.
+     */
+    public function setRoles(array $roles): self
+    {
+        $this->role = !empty($roles) ? $roles[0] : null;
         return $this;
     }
 
-    public function getPasswd(): ?string
+    /**
+     * @see PasswordAuthenticatedUserInterface
+     */
+    public function getPassword(): string
     {
         return $this->passwd;
     }
 
-    public function setPasswd(?string $passwd): static
+    public function setPassword(string $passwd): static
     {
         $this->passwd = $passwd;
 
         return $this;
     }
 
-    public function getRole(): ?string
-    {
-        return $this->role;
-    }
-
-    public function setRole(?string $role): static
-    {
-        $this->role = $role;
-
-        return $this;
-    }
+    
 
     public function getImageUser(): ?string
     {
@@ -135,6 +190,42 @@ class User
     public function setImageUser(string $imageUser): static
     {
         $this->imageUser = $imageUser;
+
+        return $this;
+    }
+
+
+
+
+
+    /**
+     * Returning a salt is only needed, if you are not using a modern
+     * hashing algorithm (e.g. bcrypt or sodium) in your security.yaml.
+     *
+     * @see UserInterface
+     */
+    public function getSalt(): ?string
+    {
+        return null;
+    }
+
+    /**
+     * @see UserInterface
+     */
+    public function eraseCredentials(): void
+    {
+        // If you store any temporary, sensitive data on the user, clear it here
+        // $this->plainPassword = null;
+    }
+
+    public function isStatus(): ?bool
+    {
+        return $this->status;
+    }
+
+    public function setStatus(?bool $status): static
+    {
+        $this->status = $status;
 
         return $this;
     }

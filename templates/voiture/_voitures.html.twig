@@ -1,0 +1,19 @@
+{% if voitures is empty %}
+    <p>Aucun résultat trouvé.</p>
+{% else %}
+    <div class="row g-4">
+        {% for voiture in voitures %}
+            <div class="col-md-4" align="center">
+                <div class="card">
+                    <img src="{{ asset('uploads/' ~ voiture.img) }}" class="card-img-top" alt="Image de la voiture">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ voiture.marque }} {{ voiture.modele }}</h5>
+                        <p class="card-text"><strong>Couleur:</strong> {{ voiture.couleur }}</p>
+                        <p class="card-text"><strong>Prix:</strong> {{ voiture.prix }}</p>
+                        <p class="card-text"><strong>Description:</strong> {{ voiture.description }}</p>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% endif %}

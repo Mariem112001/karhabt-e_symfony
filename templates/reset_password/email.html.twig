@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Password Reset</title>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f4f9ff;
+        color: #333;
+        padding: 20px;
+    }
+
+    h1 {
+        color: #0a3a6c;
+    }
+
+    a {
+        color: #007bff;
+        text-decoration: none;
+    }
+
+    a:hover {
+        text-decoration: underline;
+    }
+
+    p {
+        color: #333;
+    }
+
+    .footer-text {
+        color: #666;
+    }
+</style>
+</head>
+<body>
+    <h1>Hi!</h1>
+    <p>To reset your password, please click on the following link:</p>
+    <a href="{{ url('app_reset_password', {token: resetToken.token}) }}" target="_blank">
+        Reset Password
+    </a>
+    <p>This link will expire in {{ resetToken.expirationMessageKey|trans(resetToken.expirationMessageData, 'ResetPasswordBundle') }}.</p>
+    <p class="footer-text">Cheers!</p>
+</body>
+</html>

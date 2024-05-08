@@ -1,0 +1,66 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Actualite{% endblock %}
+
+{% block body %}
+    <div class="container mt-4">
+        <div class="card">
+            <img src="{{ asset('uploads/' ~ actualite.image) }}" class="card-img-top" alt="{{ actualite.titre }}" style="height: 800px; width: 100%;">
+            <div class="card-body">
+                <h2 class="card-title">{{ actualite.titre }}</h2>
+                <p class="card-text">{{ actualite.contenue }}</p>
+            </div>
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item">Rating: {{ actualite.rating }}</li>
+                <li class="list-group-item">Published on: {{ actualite.date ? actualite.date|date('Y-m-d') : '' }}</li>
+            </ul>
+            <div class="card-body d-flex justify-content-center">
+            <div>
+                {{ form_start(ratingForm) }}
+                {{ form_widget(ratingForm) }}
+                <button type="submit" class="btn btn-primary">Update Rating</button>
+                {{ form_end(ratingForm) }}
+            </div>
+            </div>
+            </div>
+             <!-- Comment section -->
+            <div class="card-body">
+                <h4>Comments</h4>
+                <ul class="list-group">
+                    {% for commentaire in commentaires %}
+                        <li class="list-group-item">
+                            {{ commentaire.contenue }}
+                            <small class="text-muted">{{ commentaire.date ? commentaire.date|date('Y-m-d') : '' }}</small>
+
+                            <!-- Response section -->
+                            <ul class="list-group mt-2">
+                                {% for reponse in commentaire.reponses %}
+                                    <li class="list-group-item">
+                                        User : {{ reponse.contenue }}
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                         <!-- Response section -->
+                            <ul class="list-group mt-2">
+                                {% for reponse in commentaire.reponses %}
+                                    <li class="list-group-item">
+                                        User : {{ reponse.contenue }}
+                                    </li>
+                                {% endfor %}
+                            </ul>
+
+                            <!-- Response button -->
+                            <a href="{{ path('app_reponse_add', {'commentaireId': commentaire.id}) }}" class="btn btn-primary">Reponse</a>
+                        </li>
+                   {% endfor %}
+                </ul>
+                <!-- Commentaire form -->
+                {{ form_start(commentaireForm,{'attr': {'novalidate': 'novalidate'}}) }}
+                {{ form_widget(commentaireForm,{'attr': {'novalidate': 'novalidate'}}) }}
+                <button type="submit" class="btn btn-primary">Post Comment</button>
+                {{ form_end(commentaireForm,{'attr': {'novalidate': 'novalidate'}}) }}
+            </div>
+            <a href="{{ path('app_actualite_index') }}" class="btn btn-primary">Back to Home</a>
+        </div>
+    </div>
+{% endblock %}
