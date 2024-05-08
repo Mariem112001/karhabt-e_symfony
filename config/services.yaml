@@ -6,6 +6,7 @@
 parameters:
     images_directory: '%kernel.project_dir%/public/uploads/images'
     img_directory: '%kernel.project_dir%/public/uploads'
+    .container.dumper.inline_factories: true
 services:
     # default configuration for services in *this* file
     _defaults:

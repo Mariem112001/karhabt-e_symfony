@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     	
-    <title>{% block title %} CarServ - Car Repair HTML Template {% endblock %}</title>
+    <title>{% block title %} KARHABT-E {% endblock %}</title>
       
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <meta content="" name="keywords">
@@ -52,39 +52,42 @@
 
     <!-- Navbar Start -->
     <nav class="navbar navbar-expand-lg bg-white navbar-light shadow sticky-top p-0">
-        <a href="index.html" class="navbar-brand d-flex align-items-center px-4 px-lg-5">
-            <h2 class="m-0 text-primary"><i class="fa fa-car me-3"></i>CarServ</h2>
-        </a>
+    
         <button type="button" class="navbar-toggler me-4" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarCollapse">
             <div class="navbar-nav ms-auto p-4 p-lg-0">
-                <a   class="nav-item nav-link active">Home</a>
+              
          
                 
-                <a href="{{ path('app_messagerie_indexclient') }}"  class="nav-item nav-link">messagerie</a>
-                <a href="{{ path('app_reclamation_index') }}"  class="nav-item nav-link">reclamation</a>
-              
-                <a href="{{ path('app_dossier_index') }}"  class="nav-item nav-link">dossier</a>
-              
-                <a href="{{ path('app_demande_dossier_index') }}"  class="nav-item nav-link">demande dossier</a>
-
-                <a href="{{ path('app_home_blog') }}"  class="nav-item nav-link">Blog</a>
-                <div class="nav-item dropdown">
-                    <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Pages</a>
-                    <div class="dropdown-menu fade-up m-0">
-                        <a href="{{ path('app_user_profile') }}" class="dropdown-item">Profile</a>
-                         <a href="{{ path('app_voiture_show') }}" class="dropdown-item">Voitures</a>
-                        <a href="{{ path('app_arrivage_show') }}" class="dropdown-item">Arrivages</a>
-                        <a href="{{ path('app_logout') }}" class="dropdown-item">Logout</a>
-                
-                    </div>
+                <div class="navbar-nav ms-auto">
+                    {% if app.user %}
+                        <a href="{{ path('app_messagerie_indexclient') }}"  class="nav-item nav-link">messagerie</a>
+                        <a href="{{ path('app_reclamation_index') }}"  class="nav-item nav-link">reclamation</a>
+                        <a href="{{ path('app_dossier_index') }}"  class="nav-item nav-link">dossier</a>
+                        <a href="{{ path('app_demande_dossier_index') }}"  class="nav-item nav-link">demande dossier</a>
+                        <a href="{{ path('app_home_blog') }}"  class="nav-item nav-link">Blog</a>
+                        <div class="nav-item dropdown">
+                            <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Pages</a>
+                            <div class="dropdown-menu fade-up m-0">
+                                <a href="{{ path('app_user_profile') }}" class="dropdown-item">Profile</a>
+                                <a href="{{ path('app_voiture_show') }}" class="dropdown-item">Voitures</a>
+                                <a href="{{ path('app_arrivage_show') }}" class="dropdown-item">Arrivages</a>
+                                <a href="{{ path('app_logout') }}" class="dropdown-item">Logout</a>
+                            </div>
+                        </div>
+                    {% else %}
+                        <a href="{{ path('app_login') }}"  class="btn btn-primary py-4 px-lg-5 d-none d-lg-block">Login</a>
+                     
+                    {% endif %}
                 </div>
-                <a href="contact.html" class="nav-item nav-link">Contact</a>
-            </div>
-            <a href="{{ path('app_login') }}" class="btn btn-primary py-4 px-lg-5 d-none d-lg-block">Sign Up<i class="fa fa-arrow-right ms-3"></i></a>
-        </div>
+                
+
+            {% if not app.user %}
+            <a href="{{ path('app_register') }}" class="btn btn-primary py-4 px-lg-5 d-none d-lg-block">Sign Up<i class="fa fa-arrow-right ms-3"></i></a>
+        {% endif %}
+         </div>
     
        
     
@@ -113,10 +116,10 @@
                     <p class="mb-2"><i class="fa fa-phone-alt me-3"></i>+012 345 67890</p>
               
                     <div class="d-flex pt-2">
-                        <a class="btn btn-outline-light btn-social" href=""><i class="fab fa-twitter"></i></a>
-                        <a class="btn btn-outline-light btn-social" href=""><i class="fab fa-facebook-f"></i></a>
-                        <a class="btn btn-outline-light btn-social" href=""><i class="fab fa-youtube"></i></a>
-                        <a class="btn btn-outline-light btn-social" href=""><i class="fab fa-linkedin-in"></i></a>
+                        <a class="btn btn-outline-light btn-social" ><i class="fab fa-twitter"></i></a>
+                        <a class="btn btn-outline-light btn-social"  ><i class="fab fa-facebook-f"></i></a>
+                        <a class="btn btn-outline-light btn-social" ><i class="fab fa-youtube"></i></a>
+                        <a class="btn btn-outline-light btn-social"  ><i class="fab fa-linkedin-in"></i></a>
                     </div>
                 </div>
                 <div class="col-lg-3 col-md-6">
@@ -128,11 +131,11 @@
                 </div>
                 <div class="col-lg-3 col-md-6">
                     <h4 class="text-light mb-4">Services</h4>
-                    <a class="btn btn-link" href="">Diagnostic Test</a>
-                    <a class="btn btn-link" href="">Engine Servicing</a>
-                    <a class="btn btn-link" href="">Tires Replacement</a>
-                    <a class="btn btn-link" href="">Oil Changing</a>
-                    <a class="btn btn-link" href="">Vacuam Cleaning</a>
+                    <a class="btn btn-link"  >Diagnostic Test</a>
+                    <a class="btn btn-link"  >Engine Servicing</a>
+                    <a class="btn btn-link"  >Tires Replacement</a>
+                    <a class="btn btn-link"  >Oil Changing</a>
+                    <a class="btn btn-link"  >Vacuam Cleaning</a>
                 </div>
                 <div class="col-lg-3 col-md-6">
                     <h4 class="text-light mb-4">Newsletter</h4>
