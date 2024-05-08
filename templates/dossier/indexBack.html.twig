@@ -133,7 +133,11 @@
                                 <a class="btn btn-sm-square bg-white text-primary me-1" style="border-radius: 10px" href="{{ path('app_dossier_back_delete', {id: dossier.id}) }}">
      Supprimer
     </a>
-                                <a class="fa fa-check" " style="border-radius: 10px" href="{{ path('app_send_email') }}">
+    <a class="fa fa-check" " style="border-radius: 10px" href="{{ path('app_send_email', {'idu': dossier.user.idu}) }}">
+    </a>
+    
+    </a>
+    
      
     </a>
      

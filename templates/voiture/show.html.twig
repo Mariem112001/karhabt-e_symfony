@@ -3,12 +3,14 @@
 {% block body %}
     <h1>Voitures</h1>
 <!-- Template Stylesheet -->
+
     <link href="{{ asset('front/css/style.css') }}" rel="stylesheet">
     {# Barre de recherche #}
     <form id="searchForm" action="{{ path('app_voiture_search') }}" method="GET">
         <input type="text" id="searchInput" name="criteria" placeholder="Rechercher...">
     </form>
-
+   
+   
     <div class="row g-4" id="voituresContainer">
         {% if voitures is empty %}
             <p>Aucun résultat trouvé.</p>
@@ -22,6 +24,7 @@
                             <p class="card-text"><strong>Couleur:</strong> {{ voiture.couleur }}</p>
                             <p class="card-text"><strong>Prix:</strong> {{ voiture.prix }}</p>
                             <p class="card-text"><strong>Description:</strong> {{ voiture.description }}</p>
+                            <a href="{{ path('app_dossier_new') }}" class="card-text id="openFormBtn" >Nouveau bon d'achat</a>
                         </div>
                     </div>
                 </div>
