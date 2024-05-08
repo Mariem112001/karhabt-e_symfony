@@ -35,7 +35,7 @@ class VoitureController extends AbstractController
             'voitures' => $voitures,
         ]);
     }
-    #[IsGranted('Admin')]
+ 
     #[Route('/new', name: 'app_voiture_new', methods: ['GET', 'POST'])]
     public function new(SecurityController $security,Request $request, EntityManagerInterface $entityManager): Response
     {
@@ -92,7 +92,7 @@ class VoitureController extends AbstractController
     ]);
     }
    
-    #[Route('/{idv}/edit', name: 'app_voiture_edit', methods: ['GET', 'POST'])]
+   /* #[Route('/{idv}/edit', name: 'app_voiture_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Voiture $voiture, EntityManagerInterface $entityManager): Response
      
 {
@@ -130,7 +130,46 @@ class VoitureController extends AbstractController
         'idv' => $voiture->getIdv(), // Pass the idv value to the template
     ]);
     
+}*/
+
+#[Route('/{idv}/edit', name: 'app_voiture_edit', methods: ['GET', 'POST'])]
+public function edit(Request $request, Voiture $voiture, EntityManagerInterface $entityManager): Response
+{
+    $form = $this->createForm(VoitureType::class, $voiture);
+    $form->handleRequest($request);
+
+    if ($form->isSubmitted() && $form->isValid()) {
+        // Handle image upload if a new image file has been provided
+        $imageFile = $form->get('img')->getData();
+        if ($imageFile) {
+            // Generate a unique filename
+            $newFilename = uniqid().'.'.$imageFile->guessExtension();
+            // Move the uploaded file to the desired directory
+            try {
+                $imageFile->move(
+                    $this->getParameter('img_directory'),
+                    $newFilename
+                );
+            } catch (FileException $e) {
+                // Handle file upload error
+            }
+            // Update the entity with the new image filename
+            $voiture->setImg($newFilename);
+        }
+
+        // Persist and save the entity
+        $entityManager->flush();
+
+        return $this->redirectToRoute('app_voiture_index', [], Response::HTTP_SEE_OTHER);
+    }
+
+    return $this->render('voiture/edit.html.twig', [
+        'voiture' => $voiture,
+        'form' => $form->createView(),
+        'idv' => $voiture->getIdv(), // Pass the idv value to the template
+    ]);
 }
+
  
     #[Route('/{idv}', name: 'app_voiture_delete', methods: ['POST'])]
     public function delete(Request $request, Voiture $voiture, EntityManagerInterface $entityManager): Response

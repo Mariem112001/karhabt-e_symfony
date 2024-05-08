@@ -94,12 +94,12 @@ class Voiture
         return $this;
     }
 
-    public function getPrix(): ?float
+    public function getPrix(): ?string
     {
         return $this->prix;
     }
 
-    public function setPrix(?float $prix): static
+    public function setPrix(?string $prix): static
     {
         $this->prix = $prix;
 

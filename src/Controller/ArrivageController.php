@@ -17,6 +17,7 @@ use Symfony\Component\Mailer\Transport;
 use Symfony\Component\Mime\Email;
 use Symfony\Component\Mailer\MailerInterface;
 
+use Symfony\Component\Security\Core\Security;
 
 
 #[Route('/arrivage')]
@@ -44,14 +45,14 @@ class ArrivageController extends AbstractController
     }
 
     #[Route('/new', name: 'app_arrivage_new', methods: ['GET', 'POST'])]
-    public function new(SecurityController $security,Request $request, EntityManagerInterface $entityManager, MailerInterface $mailer): Response
+    public function new(Security $security, Request $request, EntityManagerInterface $entityManager, MailerInterface $mailer): Response
     {
         $arrivage = new Arrivage();
         $form = $this->createForm(ArrivageType::class, $arrivage);
         $form->handleRequest($request);
-
+    
         if ($form->isSubmitted() && $form->isValid()) {
-            $user=$security->getUser();
+            $user = $security->getUser();
             $arrivage->setUser($user);
             $entityManager->persist($arrivage);
             $entityManager->flush();
@@ -59,24 +60,22 @@ class ArrivageController extends AbstractController
                 'quantity' => $arrivage->getQuantite(),
                 'dateEntree' => $arrivage->getDateEntree(),
             ];
-           
-
+    
             $voiture = $arrivage->getVoiture();
             $voitureId = $voiture->getIdv();
             
-    
             // Envoyer l'email avec les détails de la nouvelle arrivée
-            $this->sendEmail($mailer, $entityManager, $details, $voitureId);
-
-
+            $this->sendEmail($security, $mailer, $entityManager, $details, $voitureId);
+    
             return $this->redirectToRoute('app_arrivage_index', [], Response::HTTP_SEE_OTHER);
         }
-
+    
         return $this->renderForm('arrivage/new.html.twig', [
             'arrivage' => $arrivage,
             'form' => $form,
         ]);
     }
+    
 
     #[Route('/show', name: 'app_arrivage_show', methods: ['GET'])]
     public function show(EntityManagerInterface $entityManager): Response
@@ -119,7 +118,7 @@ class ArrivageController extends AbstractController
         return $this->redirectToRoute('app_arrivage_index', [], Response::HTTP_SEE_OTHER);
     }
 
-    #[Route('/email', name: 'app_email')]
+  /*  #[Route('/email', name: 'app_email')]
 public function sendEmail(MailerInterface $mailer, EntityManagerInterface $entityManager, $details, int $voitureId)
 {
     $transport = Transport::fromDsn('smtp://davincisdata@gmail.com:vjyyzltfspajsbpf@smtp.gmail.com:587');
@@ -147,6 +146,45 @@ public function sendEmail(MailerInterface $mailer, EntityManagerInterface $entit
 
     // Envoyer l'email
     $mailer->send($email);
+}*/
+
+
+#[Route('/email', name: 'app_email')]
+public function sendEmail(Security $security, MailerInterface $mailer, EntityManagerInterface $entityManager, $details, int $voitureId): Response
+{
+    // Get the current logged-in user
+    $user = $security->getUser();
+    $userEmail = $user->getEmail();
+
+    // Initialize the transport (SMTP in this case)
+    $transport = Transport::fromDsn('smtp://davincisdata@gmail.com:vjyyzltfspajsbpf@smtp.gmail.com:587');
+    $mailer = new Mailer($transport);
+    
+    // Get the details of the car from its ID
+    $voitureDetails = $this->getDetailsFromId($entityManager, $voitureId);
+    $marque = $voitureDetails['marque'] ?? 'Unknown Marque';
+    $modele = $voitureDetails['modele'] ?? 'Unknown Model';
+
+    // Build the custom email content with the details of the new arrival, car brand, and model
+    $mailContent = "A new arrival is added with these details:\n";
+    $mailContent .= "Quantity: " . $details['quantity'] . "\n";
+    $mailContent .= "Entry Date: " . $details['dateEntree']->format('Y-m-d') . "\n";
+    $mailContent .= "Car Brand: " . $marque . "\n";
+    $mailContent .= "Car Model: " . $modele . "\n";
+
+    // Create the email
+    $email = (new Email())
+        ->from('davincisdata@gmail.com')
+        ->to($userEmail) // Send the email to the logged-in user
+        ->subject('New Arrival Notification')
+        ->text($mailContent)
+        ->html('<p>' . $mailContent . '</p>');
+
+    // Send the email
+    $mailer->send($email);
+
+    // Return a response
+    return new Response('Email sent successfully!');
 }
 
 // Méthode pour récupérer la marque et le modèle de la voiture à partir de son ID

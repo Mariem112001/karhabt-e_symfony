@@ -1,0 +1,14 @@
+
+{% extends 'baseFront.html.twig' %}
+
+{% block title %} 
+   Nouveau message
+{% endblock %}
+
+{% block body %}
+
+
+    {{ include('messagerie/_form.html.twig') }}
+
+    <a href="{{ path('app_messagerie_indexclient') }}">Retour</a>
+{% endblock %}
