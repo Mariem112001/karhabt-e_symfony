@@ -1,4 +1,4 @@
-{% extends 'base.html.twig' %}
+{% extends 'basefront.html.twig' %}
 
 {% block title %}Actualite{% endblock %}
 
@@ -60,7 +60,7 @@
                 <button type="submit" class="btn btn-primary">Post Comment</button>
                 {{ form_end(commentaireForm,{'attr': {'novalidate': 'novalidate'}}) }}
             </div>
-            <a href="{{ path('app_actualite_index') }}" class="btn btn-primary">Back to Home</a>
+            <a href="{{ path('app_home_blog') }}" class="btn btn-primary">Back to Home</a>
         </div>
     </div>
 {% endblock %}

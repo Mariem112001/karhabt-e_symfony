@@ -19,10 +19,20 @@ use Endroid\QrCode\Writer\Result\PngResult;
 use Symfony\Component\HttpFoundation\Request;
 
 
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+
+ 
+#[Route('/home_blog')]
 class home_blogController extends AbstractController
 {
+    private $qrCodeBuilder;
+
+    public function __construct(BuilderInterface $qrCodeBuilder)
+    {
+        $this->qrCodeBuilder = $qrCodeBuilder;
+    }
     
-    #[Route('/', name: 'app_home')]
+    #[Route('/', name: 'app_home_blog')]
     public function index(ActualiteRepository $actualiteRepository): Response
 {
     $actualites = $actualiteRepository->findAll();
@@ -69,7 +79,7 @@ private function convertQrCodeResultToString(PngResult $qrCodeResult): string
     // Adjust this logic based on how you want to represent the QR code data
     return 'data:image/png;base64,' . base64_encode($qrCodeResult->getString());
 }
-
+ 
 #[Route('/{id}', name: 'app_actualite_show_front', methods: ['GET', 'POST'])]
 public function show(Request $request, Actualite $actualite): Response
 {
@@ -140,7 +150,7 @@ public function show(Request $request, Actualite $actualite): Response
     ]);
 }
 
-public function add(Request $request, int $commentaireId): Response
+public function add(SecurityController $security,Request $request, int $commentaireId): Response
     {
         $commentaire = $this->getDoctrine()->getRepository(Commentaire::class)->find($commentaireId);
         
@@ -151,6 +161,8 @@ public function add(Request $request, int $commentaireId): Response
         $reponseForm->handleRequest($request);
 
         if ($reponseForm->isSubmitted() && $reponseForm->isValid()) {
+            $user=$security->getUser();
+            $commentaire->setUser($user);
             $reponse->setCommentaire($commentaire);
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($reponse);

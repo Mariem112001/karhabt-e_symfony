@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>liste des bons d'achats</title>
+     <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+         .logo {
+            position: absolute;
+            top: 0;
+            right: 0;
+        }
+    </style>
+    
+</head>
+
+ 
+      
+
+<body>
+ <div class="logo">
+      
+        <img  src="{{ asset('/front/img/karhabty.jpg') }}" alt="Image" width="100" height="75">
+</div>
+    <h1>Dossier de bon d'achat</h1>
+  
+    <table border="1">
+        <tr>
+            <th>CIN</th>
+            <th>Nom</th>
+            <th>Prénom</th>
+            <th>Région</th>
+            <th>Date de naissance</th>
+            <th>Montant</th>
+        </tr>
+        {% for dossier in dossiers %}
+            <tr>
+                <td>{{ dossier.cin }}</td>
+                <td>{{ dossier.nom }}</td>
+                <td>{{ dossier.prenom }}</td>
+                <td>{{ dossier.region }}</td>
+                <td>{{ dossier.date |date('d/m/Y')}}</td>
+                <td>{{ dossier.montant }}</td>
+            </tr>
+        {% endfor %}
+    </table>
+
+   
+</body>
+</html>

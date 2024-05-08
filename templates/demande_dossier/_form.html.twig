@@ -1,0 +1,37 @@
+{{ form_start(form) }}
+    {{ form_widget(form._token) }}
+
+    <div class="d-flex flex-column" style="gap: 20px; width: 300px;">
+        <div class="form-group">
+            {{ form_label(form.urlcin, null, {'label_attr': {'class': 'text-white'}}) }}
+            {{ form_widget(form.urlcin, {'attr': {'class': 'form-control', 'accept': '.pdf'}}) }}
+            <span class="text-danger">{{ form_errors(form.urlcin) }}</span>
+        </div>
+
+        <div class="form-group">
+            {{ form_label(form.urlcerretenu, null, {'label_attr': {'class': 'text-white'}}) }}
+            {{ form_widget(form.urlcerretenu, {'attr': {'class': 'form-control', 'accept': '.pdf'}}) }}
+            <span class="text-danger">{{ form_errors(form.urlcerretenu) }}</span>
+        </div>
+
+        <div class="form-group">
+            {{ form_label(form.urldecrevenu, null, {'label_attr': {'class': 'text-white'}}) }}
+            {{ form_widget(form.urldecrevenu, {'attr': {'class': 'form-control', 'accept': '.pdf'}}) }}
+            <span class="text-danger">{{ form_errors(form.urldecrevenu) }}</span>
+        </div>
+
+        <div class="form-group">
+            {{ form_label(form.urlatttravail, null, {'label_attr': {'class': 'text-white'}}) }}
+            {{ form_widget(form.urlatttravail, {'attr': {'class': 'form-control', 'accept': '.pdf'}}) }}
+            <span class="text-danger">{{ form_errors(form.urlatttravail) }}</span>
+        </div>
+
+        <div class="form-group">
+            {{ form_label(form.urlextnaissance, null, {'label_attr': {'class': 'text-white'}}) }}
+            {{ form_widget(form.urlextnaissance, {'attr': {'class': 'form-control', 'accept': '.pdf'}}) }}
+            <span class="text-danger">{{ form_errors(form.urlextnaissance) }}</span>
+        </div>
+
+        <button type="submit" class="btn btn-primary" >Submit</button>
+    </div>
+{{ form_end(form) }}

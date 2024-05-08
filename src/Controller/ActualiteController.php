@@ -21,6 +21,15 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 #[Route('/admin/actualites')]
 class ActualiteController extends AbstractController
 {
+
+
+    private $entityManager;
+
+    public function __construct(EntityManagerInterface $entityManager)
+    {
+        $this->entityManager = $entityManager;
+    }
+
     #[Route('/', name: 'app_actualite_index', methods: ['GET'])]
     public function index(Request $request, PaginatorInterface $paginator, ActualiteRepository $actualiteRepository): Response
     {
@@ -125,7 +134,7 @@ class ActualiteController extends AbstractController
                     if (file_exists($oldFilePath)) {
                         unlink($oldFilePath);
                     }
-                    $actualite->setImage(null);
+                    $actualite->setImage("null");
                 }
             }
             $entityManager->flush();

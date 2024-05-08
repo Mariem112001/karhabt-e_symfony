@@ -5,9 +5,11 @@ namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use App\Entity\Voiture;
-use Symfony\Component\Validator\Constraints as Assert;
  
-#[ORM\Entity]
+use Symfony\Component\Validator\Constraints as Assert;
+use App\Repository\ArrivageRepository;
+
+#[ORM\Entity(repositoryClass: ArrivageRepository::class)]
 class Arrivage
 {
     #[ORM\Id]
