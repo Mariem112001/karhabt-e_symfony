@@ -1,3 +1,7 @@
 #index:
 #    path: /
 #    controller: App\Controller\DefaultController::index
+app_voiture_delete:
+    path: /voiture/{idv}
+    controller: App\Controller\VoitureController::delete
+    methods: DELETE
