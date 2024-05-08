@@ -148,8 +148,8 @@ public function show(Request $request, Actualite $actualite): Response
         'commentaireForm' => $commentaireForm->createView(),
         
     ]);
-}
-
+} 
+#[Route('/{id}', name: 'app_reponse_add', methods: ['GET', 'POST'])]
 public function add(SecurityController $security,Request $request, int $commentaireId): Response
     {
         $commentaire = $this->getDoctrine()->getRepository(Commentaire::class)->find($commentaireId);

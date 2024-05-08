@@ -1,0 +1,23 @@
+{# generate_pdf.twig #}
+{% block body %}
+    {% if app.request.isXmlHttpRequest() %}
+        {% set dates = app.request.request.get('dates') %}
+        {% set counts = app.request.request.get('counts') %}
+
+        {# Create PDF content using Twig #}
+        {% set pdfContent = "" %}
+        {% for i in 0..dates|length - 1 %}
+            {% set pdfContent = pdfContent ~ dates[i]|date('Y-m-d') ~ ";" ~ counts[i] ~ "\n" %}
+        {% endfor %}
+
+        {# Set response headers #}
+        {% header 'Content-Type: application/pdf' %}
+        {% header 'Content-Disposition: attachment; filename="statistiques_reclamations.pdf"' %}
+
+        {# Output PDF content #}
+        {{ pdfContent|raw }}
+    {% else %}
+        {# Handle non-AJAX request #}
+        {# Return an empty response or an error message #}
+    {% endif %}
+{% endblock %}

@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Réclamation PDF</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            width: 100%;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            margin-top: 20px;
+            border: 2px solid #333; /* Ajoute une bordure */
+        }
+        h1 {
+            font-size: 28px;
+            color: #333;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        p {
+            font-size: 16px;
+            line-height: 1.5;
+            margin-bottom: 10px;
+        }
+        strong {
+            font-weight: bold;
+        }
+        .signature {
+            margin-top: 40px;
+            text-align: right;
+        }
+        .signature img {
+            width: 150px;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>Statistiques des Réclamations</h1>
+    {% for data in statisticsData %}
+        <p><strong>Date:</strong> {{ data.date }}</p>
+        <p><strong>Nombre de réclamations:</strong> {{ data.count }}</p>
+        <!-- Ajoutez d'autres détails statistiques ici si nécessaire -->
+    {% endfor %}
+</div>
+</body>
+</html>

@@ -16,24 +16,28 @@ use Symfony\Component\Routing\Annotation\Route;
 #[Route('/demande')]
 class DemandeDossierFrontController extends AbstractController
 {
-    #[Route('/', name: 'app_demande_dossier_index', methods: ['GET'])]
-    public function index(SecurityController $security,DemandeDossierRepository $demandeDossierRepository): Response
-    {
-        $demande = $demandeDossierRepository->find(1);//id user fl intégration 
-     
-       // Get the current logged-in user
-    $user = $security->getUser();
+            #[Route('/', name: 'app_demande_dossier_index', methods: ['GET'])]
+        public function index(SecurityController $security, DemandeDossierRepository $demandeDossierRepository): Response
+        {
+            // Get the current logged-in user
+            $user = $security->getUser();
 
-    // Fetch reservations for the current user
-    $demandeyQuery = $demandeDossierRepository->findBy(['user' => $user]);
-     
-        if (!$demandeyQuery)
-            return $this->redirectToRoute('app_demande_dossier_new');
+            // Fetch reservations for the current user
+            $demandeyQuery = $demandeDossierRepository->findBy(['user' => $user]);
 
-        return $this->render('demande_dossier/showF.html.twig', [
-            'demande_dossier' => $demandeyQuery,
-        ]);
-    }
+            if (!$demandeyQuery) {
+                return $this->redirectToRoute('app_demande_dossier_new');
+            }
+
+            // Since you're expecting only one demande_dossier object,
+            // fetch the first one from the result array
+            $demandeDossier = $demandeyQuery[0];
+
+            return $this->render('demande_dossier/showF.html.twig', [
+                'demande_dossier' => $demandeDossier,
+            ]);
+        }
+
 
     #[Route('/new', name: 'app_demande_dossier_new', methods: ['GET', 'POST'])]
     public function new(SecurityController $security,Request $request, EntityManagerInterface $entityManager): Response

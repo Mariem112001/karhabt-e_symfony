@@ -1,0 +1,148 @@
+{% extends 'baseFront.html.twig' %}
+
+{% block title %}Liste des réclamations{% endblock %}
+
+
+
+{% block body %}
+<div class="container mt-5">
+    <div class="text-center mb-4">
+        <h1 class="text-primary">Mes réclamations</h1>
+    </div>
+
+    <div class="row justify-content-center mb-4">
+        <div class="col-md-6">
+            <form method="get" action="{{ path('app_reclamation_index') }}" class="form-inline justify-content-center" id="dateForm">
+                <div class="form-group mr-2">
+                    <label for="dateReclamation" class="mr-2">Sélectionner une date de réclamation:</label>
+                    <input type="text" id="dateReclamation" name="dateReclamation" class="form-control datepicker" autocomplete="off">
+
+                </div>
+            </form>
+        </div>
+        <div class="col-md-6">
+            <form id="reclamationForm" method="get" action="{{ path('app_reclamation_index') }}" class="form-inline justify-content-center">
+                <div class="form-group mr-2">
+                    <label for="orderBy" class="mr-2">Trier par:</label>
+                    <select name="orderBy" id="orderBy" class="form-control">
+                        <option value="date">Date de réclamation</option>
+                        <option value="sujet">Sujet (ordre alphabétique)</option>
+                    </select>
+                </div>
+                <div class="form-group mr-2">
+                    <label for="orderDirection" class="mr-2">Direction:</label>
+                    <select name="orderDirection" id="orderDirection" class="form-control">
+                        <option value="asc">Ascendant</option>
+                        <option value="desc">Descendant</option>
+                    </select>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="table-responsive">
+        <table class="table table-bordered table-striped" id="reclamationsTable">
+            <thead class="thead-primary">
+                <tr>
+                    <th>Sujet</th>
+                    <th>Description</th>
+                    <th>Date de réclamation</th>
+                    <th>Email de l'utilisateur</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody id="reclamationContent">
+                {% for reclamation in pagination %}
+                    <tr>
+                        <td>{{ reclamation.sujet }}</td>
+                        <td>{{ reclamation.description }}</td>
+                        <td>{{ reclamation.dateReclamation ? reclamation.dateReclamation|date('Y-m-d') : '' }}</td>
+                        <td>{{ reclamation.emailUser }}</td>
+                        <td>
+                            <a href="{{ path('app_reclamation_show', {'idr': reclamation.idr}) }}" class="btn btn-info btn-sm">Voir</a>
+                            <a href="{{ path('app_reclamation_edit', {'idr': reclamation.idr}) }}" class="btn btn-warning btn-sm">Modifier</a>
+                            <a href="{{ path('app_reclamation_response', {'idr': reclamation.idr}) }}" class="btn btn-primary btn-sm">Voir réponse</a>
+                        </td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="5">Aucune réclamation trouvée.</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <div class="row justify-content-center mt-4">
+        <nav aria-label="Page navigation" id="pagination">
+            <ul class="pagination">
+                {{ knp_pagination_render(pagination) }}
+            </ul>
+        </nav>
+    </div>
+
+    <div class="text-center mt-4">
+        <a href="{{ path('app_reclamation_new') }}" class="btn btn-primary">Nouvelle réclamation</a>
+    </div>
+</div>
+{% endblock %}
+
+{% block js %}
+{{ parent() }}
+<!-- Inclure jQuery -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<!-- Inclure jQuery UI (DatePicker dépend de jQuery UI) -->
+<link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+
+<script>
+    $(document).ready(function() {
+        $('.datepicker').datepicker({
+            dateFormat: 'yy-mm-dd', // Format de date
+        }).on("change", function() {
+            updateReclamations();
+        });
+
+        $('#reclamationForm select').change(function() {
+            updateReclamations();
+        });
+
+        function updateReclamations() {
+            var formValues = $('#dateForm, #reclamationForm').serialize();
+            $.ajax({
+                url: "{{ path('app_reclamation_index') }}",
+                type: 'GET',
+                data: formValues,
+                success: function(data) {
+                    $('#reclamationContent').html(data.reclamations.map(function(reclamation) {
+                        return `<tr>
+                            <td>${reclamation.sujet}</td>
+                            <td>${reclamation.description}</td>
+                            <td>${reclamation.dateReclamation}</td>
+                            <td>${reclamation.emailUser}</td>
+                            <td>
+                                <a href="/reclamation/show/${reclamation.idr}" class="btn btn-info btn-sm">Voir</a>
+                                <a href="/reclamation/edit/${reclamation.idr}" class="btn btn-warning btn-sm">Modifier</a>
+                                <a href="/reclamation/response/${reclamation.idr}" class="btn btn-primary btn-sm">Voir réponse</a>
+                            </td>
+                        </tr>`;
+                    }).join(''));
+
+                    $('#pagination').html('<ul class="pagination">' + new Array(data.pagination.pagesCount).fill(0).map(function(_, i) {
+                        return `<li class="page-item ${i+1 === data.pagination.page ? 'active' : ''}">
+                                    <a class="page-link" href="#" onclick="changePage(${i+1})">${i+1}</a>
+                                </li>`;
+                    }).join('') + '</ul>');
+                }
+            });
+        }
+
+        function changePage(pageNumber) {
+            $('#reclamationForm').append($('<input>').attr('type', 'hidden').attr('name', 'page').val(pageNumber));
+            updateReclamations();
+        }
+    });
+</script>
+{% endblock %}
+
+

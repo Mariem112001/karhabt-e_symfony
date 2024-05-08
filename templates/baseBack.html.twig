@@ -60,6 +60,13 @@
                 Interface
             </div>
 
+            <!-- Nav Item - Dashboard -->
+            <li class="nav-item active" href="{{ path('app_user_index') }}">
+                <a class="nav-link" href="index.html">
+                    <i class="fas fa-fw fa-tachometer-alt"></i>
+                    <span>Users</span></a>
+            </li>
+
             <!-- Nav Item - Pages Collapse Menu -->
             <li class="nav-item">
                 <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseOne"
@@ -78,21 +85,23 @@
                 </div>
             </li>
 
-            <li class="nav-item active">
-                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseOne"
-                    aria-expanded="true" aria-controls="collapseOne">
-                    <i class="fas fa-fw fa-cog"></i>
+          
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseUtilities"
+                    aria-expanded="true" aria-controls="collapseUtilities">
+                    <i class="fas fa-fw fa-wrench"></i>
                     <span>Voitures</span>
                 </a>
-                <div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#accordionSidebar">
+                <div id="collapseUtilities" class="collapse" aria-labelledby="headingUtilities"
+                    data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
-                        <h6 class="collapse-header">Services Voitures :</h6>
+                        <h6 class="collapse-header">Custom Voitures:</h6>
                         <a class="collapse-item" href="{{ path('app_voiture_index')}}">Liste Voitures</a>
                         <a class="collapse-item" href="{{ path('app_voiture_new')}}">Ajouter Voiture</a>
+                 
                     </div>
                 </div>
             </li>
-            
 
             <!-- Nav Item - Pages Collapse Menu -->
             <li class="nav-item">
@@ -109,7 +118,13 @@
                     </div>
                 </div>
             </li>
-           
+
+            <li class="nav-item">
+                <a class="nav-link" href="{{path('stats')}}">
+                    <i class="fas fa-fw fa-chart-area"></i>
+                    <span>Charts voiture</span></a>
+            </li>
+
             <li class="nav-item">
             <a class="nav-link" href="{{path('app_demande_back_dossier_index')}}">
                 <i class="fas fa-fw fa-chart-area"></i>
@@ -122,32 +137,23 @@
                     <i class="fas fa-fw fa-chart-area"></i>
                     <span>  dossier</span></a>
                  </li>
+                 <li class="nav-item">
+                    <a class="nav-link" href="{{path('app_messagerie_index')}}">
+                        <i class="fas fa-fw fa-chart-area"></i>
+                        <span>messagerie</span></a>
+                     </li>
+                 
+                    
+                     <li class="nav-item">
+                        <a class="nav-link" href="{{path('app_reponse_reclamation_index')}}">
+                            <i class="fas fa-fw fa-chart-area"></i>
+                            <span>reponse reclamation</span></a>
+                    </li>  
 
 
-
-            <li class="nav-item">
-                <a class="nav-link" href="{{path('stats')}}">
-                    <i class="fas fa-fw fa-chart-area"></i>
-                    <span>Charts voiture</span></a>
-            </li>
+        
             <!-- Nav Item - Utilities Collapse Menu -->
-            <li class="nav-item">
-                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseUtilities"
-                    aria-expanded="true" aria-controls="collapseUtilities">
-                    <i class="fas fa-fw fa-wrench"></i>
-                    <span>Utilities</span>
-                </a>
-                <div id="collapseUtilities" class="collapse" aria-labelledby="headingUtilities"
-                    data-parent="#accordionSidebar">
-                    <div class="bg-white py-2 collapse-inner rounded">
-                        <h6 class="collapse-header">Custom Utilities:</h6>
-                        <a class="collapse-item" href="utilities-color.html">Colors</a>
-                        <a class="collapse-item" href="utilities-border.html">Borders</a>
-                        <a class="collapse-item" href="utilities-animation.html">Animations</a>
-                        <a class="collapse-item" href="utilities-other.html">Other</a>
-                    </div>
-                </div>
-            </li>
+        
 
             <!-- Divider -->
             <hr class="sidebar-divider">
@@ -178,20 +184,9 @@
                 </div>
             </li>
 
-            <!-- Nav Item - Charts -->
-            <li class="nav-item">
-                <a class="nav-link" href="charts.html">
-                    <i class="fas fa-fw fa-chart-area"></i>
-                    <span>Charts</span></a>
-            </li>
+          
 
-            <!-- Nav Item - Tables -->
-            <li class="nav-item">
-                <a class="nav-link" href="tables.html">
-                    <i class="fas fa-fw fa-table"></i>
-                    <span>Tables</span></a>
-            </li>
-
+           
             <!-- Divider -->
             <hr class="sidebar-divider d-none d-md-block">
 
@@ -200,12 +195,7 @@
                 <button class="rounded-circle border-0" id="sidebarToggle"></button>
             </div>
 
-            <!-- Sidebar Message -->
-            <div class="sidebar-card d-none d-lg-flex">
-                <img class="sidebar-card-illustration mb-2" src="img/undraw_rocket.svg" alt="...">
-                <p class="text-center mb-2"><strong>SB Admin Pro</strong> is packed with premium features, components, and more!</p>
-                <a class="btn btn-success btn-sm" href="https://startbootstrap.com/theme/sb-admin-pro">Upgrade to Pro!</a>
-            </div>
+         
 
         </ul>
         <!-- End of Sidebar -->
@@ -365,18 +355,7 @@
                                         <div class="small text-gray-500">Morgan Alvarez Â· 2d</div>
                                     </div>
                                 </a>
-                                <a class="dropdown-item d-flex align-items-center" href="#">
-                                    <div class="dropdown-list-image mr-3">
-                                        <img class="rounded-circle" src="https://source.unsplash.com/Mv9hjnEUHR4/60x60"
-                                            alt="...">
-                                        <div class="status-indicator bg-success"></div>
-                                    </div>
-                                    <div>
-                                        <div class="text-truncate">Am I a good boy? The reason I ask is because someone
-                                            told me that people say this to all dogs, even if they aren't good...</div>
-                                        <div class="small text-gray-500">Chicken the Dog Â· 2w</div>
-                                    </div>
-                                </a>
+                            
                                 <a class="dropdown-item text-center small text-gray-500" href="#">Read More Messages</a>
                             </div>
                         </li>
@@ -502,6 +481,111 @@
     <!-- Page level custom scripts -->
     <script src="{{ asset('back/js/demo/chart-area-demo.js') }}"></script>
     <script src="{{ asset('back/js/demo/chart-pie-demo.js') }}"></script>
+
+
+
+
+
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+    <script>
+function createPDF() {
+    // Clone the table to not alter the original
+    var table = document.getElementById('table').cloneNode(true);
+    
+    // Remove the last th in the header
+    var headerRow = table.rows[0];
+    headerRow.deleteCell(-1); // Removes the last cell in the header row
+
+    // Remove the last td in each body row
+    var rows = table.rows;
+    for (var i = 1; i < rows.length; i++) { // Start from 1 to skip the header
+        rows[i].deleteCell(-1); // Deletes the last cell of each row
+    }
+
+    var style = "<style>";
+    style += "table {width: 100%; border-collapse: collapse; margin-top: 20px;}";
+    style += "th, td {border: 1px solid #ddd; padding: 8px; text-align: left;}";
+    style += "th {background-color: #f2f2f2;}";
+    style += "</style>";
+
+    // Create a window object.
+    var win = window.open('', '', 'height=700,width=700');
+    win.document.write('<html><head>');
+    win.document.write('<title> liste </title>');   // <title> for PDF header.
+    win.document.write(style);          // Add style inside the head tag.
+    win.document.write('</head>');
+    win.document.write('<body>');
+    win.document.write(table.outerHTML);         // The modified table contents inside the body tag.
+    win.document.close();    // Close the current window.
+    win.print();    // Print the contents.
+}
+</script>
+
+<script>
+function myFunction() {
+  // Declare variables
+  var input, filter, table, tr, td, i, txtValue;
+  input = document.getElementById("myInput");
+  filter = input.value.toUpperCase();
+  table = document.getElementById("table");
+  tr = table.getElementsByTagName("tr");
+
+  // Loop through all table rows, and hide those who don't match the search query
+  for (i = 0; i < tr.length; i++) {
+    td = tr[i].getElementsByTagName("td")[1];
+    if (td) {
+      txtValue = td.textContent || td.innerText;
+      if (txtValue.toUpperCase().indexOf(filter) > -1) {
+        tr[i].style.display = "";
+      } else {
+        tr[i].style.display = "none";
+      }
+    }
+  }
+}
+
+function sortTable(n) {
+  var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
+  table = document.getElementById("table");
+  switching = true;
+  dir = "asc";
+
+  while (switching) {
+    switching = false;
+    rows = table.rows;
+
+    for (i = 1; i < (rows.length - 1); i++) {
+      shouldSwitch = false;
+      x = rows[i].getElementsByTagName("TD")[n];
+      y = rows[i + 1].getElementsByTagName("TD")[n];
+
+      if (dir == "asc") {
+        if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
+          shouldSwitch = true;
+          break;
+        }
+      } else if (dir == "desc") {
+        if (x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()) {
+          shouldSwitch = true;
+          break;
+        }
+      }
+    }
+
+    if (shouldSwitch) {
+      rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+      switching = true;
+      switchcount++;
+    } else {
+      if (switchcount == 0 && dir == "asc") {
+        dir = "desc";
+        switching = true;
+      }
+    }
+  }
+}
+</script>
 {% endblock %}
 
 </body>
